@@ -97,7 +97,8 @@ export function TicketForm({
               >
                 <Box className="app-form-fields">
                   <PriorityDropdown
-                    register={register?.('priority')}
+                    value={values.priority ?? ''}
+                    onChange={(event) => onFieldChange?.('priority', event.target.value)}
                     options={priorityOptions}
                     error={errors.priority}
                     disabled={isSubmitting}
@@ -128,12 +129,29 @@ export function TicketForm({
           </Grid>
         ) : (
           <Box className="app-form-fields">
-            <TitleField register={register?.('title')} error={errors.title} />
-            <DescriptionField register={register?.('description')} error={errors.description} />
+            <TitleField
+              register={register?.('title')}
+              error={errors.title}
+              value={values.title}
+            />
+            <DescriptionField
+              register={register?.('description')}
+              error={errors.description}
+              value={values.description}
+            />
             <PriorityDropdown
-              register={register?.('priority')}
+              value={values.priority ?? ''}
+              onChange={(event) => onFieldChange?.('priority', event.target.value)}
               options={priorityOptions}
               error={errors.priority}
+            />
+            <CreatedByDropdown
+              value={values.createdBy ?? ''}
+              users={users}
+              isLoading={usersLoading}
+              disabled
+              required={false}
+              helperText="Reporter cannot be changed after creation"
             />
             <AssignedUserDropdown
               value={values.assignedTo ?? ''}

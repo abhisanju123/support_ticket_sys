@@ -116,6 +116,27 @@ export const resolveCommentAuthor = (createdBy, usersById) => {
 
   return formatTicketUser(createdBy);
 };
+
+/**
+ * @param {string | { _id?: string } | null | undefined} userOrId
+ * @returns {string}
+ */
+export const resolveTicketUserId = (userOrId) => {
+  if (userOrId == null || userOrId === '') {
+    return '';
+  }
+
+  if (typeof userOrId === 'string') {
+    return userOrId;
+  }
+
+  if (typeof userOrId === 'object' && userOrId._id != null) {
+    return String(userOrId._id);
+  }
+
+  return '';
+};
+
 /**
  * Public route/API identifier for a ticket (sequential ticket number).
  * @param {{ ticketNumber?: number; _id?: string } | number | string | null | undefined} ticketOrNumber

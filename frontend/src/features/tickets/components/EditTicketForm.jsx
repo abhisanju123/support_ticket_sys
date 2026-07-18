@@ -1,5 +1,5 @@
 import Typography from '@mui/material/Typography';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 
 import { TicketForm, TicketFormReadOnlySection } from '../../../components/business/tickets/form/TicketForm.jsx';
 import { useGetUsersQuery } from '../../users/api/usersApi.js';
@@ -8,7 +8,7 @@ import {
   TICKET_PRIORITY_LABELS,
   TICKET_STATUS_LABELS,
 } from '../constants/ticket.constants.js';
-import { formatTicketDate, formatTicketId } from '../utils/ticketFormatters.js';
+import { formatTicketDate, formatTicketId, getTicketRouteId, resolveTicketUserId } from '../utils/ticketFormatters.js';
 import {
   createEditTicketFormSchema,
   resetFormState,
@@ -24,38 +24,34 @@ const buildDefaultValues = (ticket) => ({
   title: ticket.title ?? '',
   description: ticket.description ?? '',
   priority: ticket.priority ?? 'medium',
-  assignedTo: ticket.assignedTo?._id ?? ticket.assignedTo ?? '',
+  createdBy: resolveTicketUserId(ticket.createdBy),
+  assignedTo: resolveTicketUserId(ticket.assignedTo),
 });
 
 const EDIT_REQUIRED_FIELDS = ['title', 'description', 'priority'];
 
 export function EditTicketForm({ ticket, onSubmit, onCancel, isSubmitting = false }) {
+  const ticketId = getTicketRouteId(ticket);
   const { data: users = [], isLoading: usersLoading } = useGetUsersQuery();
   const validUserIds = useMemo(() => users.map((user) => user._id), [users]);
   const schema = useMemo(() => createEditTicketFormSchema(validUserIds), [validUserIds]);
-  const defaultValues = useMemo(() => buildDefaultValues(ticket), [ticket]);
+  const initialValues = useMemo(() => buildDefaultValues(ticket), [ticketId]);
 
   const { form, submitHandler, globalError, clearGlobalError, isFormComplete } = useValidatedForm({
     schema,
-    defaultValues,
+    defaultValues: initialValues,
     onSubmit,
     requiredFields: EDIT_REQUIRED_FIELDS,
   });
 
   const {
     register,
-    reset,
     setValue,
     watch,
     formState: { errors },
   } = form;
 
   const values = watch();
-
-  useEffect(() => {
-    reset(buildDefaultValues(ticket));
-    clearGlobalError();
-  }, [ticket, reset, clearGlobalError]);
 
   const readOnlySection = (
     <TicketFormReadOnlySection>
@@ -72,6 +68,7 @@ export function EditTicketForm({ ticket, onSubmit, onCancel, isSubmitting = fals
 
   return (
     <TicketForm
+      key={ticketId}
       mode="edit"
       register={register}
       errors={errors}
@@ -85,7 +82,7 @@ export function EditTicketForm({ ticket, onSubmit, onCancel, isSubmitting = fals
       readOnlySection={readOnlySection}
       onSubmit={submitHandler}
       onCancel={onCancel}
-      onReset={() => resetFormState(form, defaultValues, clearGlobalError)}
+      onReset={() => resetFormState(form, initialValues, clearGlobalError)}
       isSubmitting={isSubmitting}
       isFormComplete={isFormComplete}
     />

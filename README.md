@@ -61,3 +61,4 @@ App runs at `http://localhost:5173` by default.
 | [`docs/DATABASE_DESIGN.md`](docs/DATABASE_DESIGN.md) | Database entities, relationships, and indexes |
 | [`docs/REPOSITORY_LAYER_DESIGN.md`](docs/REPOSITORY_LAYER_DESIGN.md) | Repository layer architecture |
 | [`docs/SERVICE_LAYER_DESIGN.md`](docs/SERVICE_LAYER_DESIGN.md) | Service layer architecture |
+| [`docs/submission/`](docs/submission/) | Assessment submission pack (requirements, design, tests, reflection, PR description) |

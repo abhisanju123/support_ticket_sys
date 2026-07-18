@@ -97,6 +97,7 @@ export function EditTicketPage() {
       />
 
       <EditTicketForm
+        key={ticketId}
         ticket={ticket}
         onSubmit={handleSubmit}
         onCancel={() => navigate(buildTicketDetailsPath(ticketId))}

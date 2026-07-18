@@ -19,7 +19,7 @@ export function UserSelectField({
   allowEmpty = false,
   emptyLabel = 'Unassigned',
 }) {
-  const selectedUser = users.find((user) => user._id === value) ?? null;
+  const selectedUser = users.find((user) => String(user._id) === String(value)) ?? null;
 
   const handleChange = (_event, user) => {
     onChange?.({ target: { name, value: user?._id ?? '' } });
@@ -35,7 +35,7 @@ export function UserSelectField({
       loading={isLoading}
       disabled={disabled || isLoading}
       getOptionLabel={(user) => user.name}
-      isOptionEqualToValue={(option, selected) => option._id === selected._id}
+      isOptionEqualToValue={(option, selected) => String(option._id) === String(selected._id)}
       filterOptions={(options, { inputValue }) => {
         const query = inputValue.trim().toLowerCase();
 
