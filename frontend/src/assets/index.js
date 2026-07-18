@@ -1,0 +1,3 @@
+/**
+ * Static assets (images, icons, fonts).
+ */

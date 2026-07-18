@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+backend/dist/
+frontend/dist/
+
+# Environment
+.env
+.env.test
+.env.local
+.env.*.local
+backend/.env
+backend/.env.test
+frontend/.env
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Test coverage
+coverage/
+backend/coverage/
+frontend/coverage/
+
+# TypeScript cache
+*.tsbuildinfo

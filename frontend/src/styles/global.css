@@ -1,0 +1,83 @@
+@import './tokens.css';
+
+/**
+ * Global application styles — typography, focus, and app shell.
+ */
+
+html {
+  font-family: var(--app-font-sans);
+  font-size: 16px;
+  line-height: var(--app-leading-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--app-color-surface);
+  color: var(--app-color-text-primary);
+}
+
+#root {
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: var(--app-font-weight-semibold);
+  line-height: var(--app-leading-tight);
+  color: var(--app-color-text-primary);
+}
+
+h1 {
+  font-size: var(--app-text-5xl);
+}
+
+h2 {
+  font-size: var(--app-text-4xl);
+}
+
+h3 {
+  font-size: var(--app-text-3xl);
+}
+
+h4 {
+  font-size: var(--app-text-2xl);
+}
+
+h5 {
+  font-size: var(--app-text-xl);
+}
+
+h6 {
+  font-size: var(--app-text-lg);
+}
+
+p {
+  line-height: var(--app-leading-relaxed);
+}
+
+small {
+  font-size: var(--app-text-sm);
+}
+
+code,
+pre,
+kbd,
+samp {
+  font-family: var(--app-font-mono);
+}
+
+:focus-visible {
+  outline: 2px solid var(--app-color-primary);
+  outline-offset: 2px;
+}
+
+::selection {
+  background-color: color-mix(in srgb, var(--app-color-primary) 25%, transparent);
+}

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" fill="none" role="img" aria-label="Support Ticket System">
+  <rect width="40" height="40" rx="10" fill="#1565C0"/>
+  <path
+    d="M11 14.5C11 13.1193 12.1193 12 13.5 12H26.5C27.8807 12 29 13.1193 29 14.5V25.5C29 26.8807 27.8807 28 26.5 28H13.5C12.1193 28 11 26.8807 11 25.5V14.5Z"
+    fill="#FFFFFF"
+  />
+  <circle cx="11" cy="17.5" r="1.5" fill="#1565C0"/>
+  <circle cx="11" cy="22.5" r="1.5" fill="#1565C0"/>
+  <path d="M16 17H27" stroke="#1565C0" stroke-width="2" stroke-linecap="round"/>
+  <path d="M16 21H23" stroke="#42A5F5" stroke-width="2" stroke-linecap="round"/>
+  <path
+    d="M24.5 21L26 22.5L29.5 19"
+    stroke="#2E7D32"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>
