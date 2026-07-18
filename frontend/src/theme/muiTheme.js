@@ -134,14 +134,9 @@ export const muiTheme = createTheme({
           textTransform: 'none',
           fontWeight: typography.fontWeight.semibold,
           letterSpacing: '0.01em',
-          transition:
-            'transform 0.22s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.22s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease',
-          '&:hover': {
-            transform: 'translateY(-1px)',
-          },
-          '&:active': {
-            transform: 'translateY(0) scale(0.98)',
-            transitionDuration: '0.08s',
+          transition: 'none',
+          '&:active:not(:disabled)': {
+            animation: 'app-btn-press 0.14s ease forwards',
           },
           '&:disabled, &.Mui-disabled': {
             pointerEvents: 'none',
@@ -152,47 +147,18 @@ export const muiTheme = createTheme({
           '&.Mui-disabled:hover': {
             transform: 'none',
             boxShadow: 'none',
+            animation: 'none',
           },
           '&:focus-visible': {
             outline: `2px solid ${theme.palette.primary.main}`,
             outlineOffset: 2,
           },
         }),
-        contained: ({ theme }) => ({
+        contained: () => ({
           boxShadow: 'none',
-          '&:hover': {
-            boxShadow:
-              theme.palette.mode === 'light'
-                ? '0 6px 20px rgba(21, 101, 192, 0.28)'
-                : '0 6px 20px rgba(0, 0, 0, 0.45)',
-          },
-          '&:active': {
-            boxShadow: 'none',
-          },
-          '&.Mui-disabled': {
-            backgroundColor:
-              theme.palette.mode === 'light' ? colors.neutral[300] : 'rgba(255, 255, 255, 0.12)',
-            color:
-              theme.palette.mode === 'light' ? colors.neutral[600] : 'rgba(255, 255, 255, 0.38)',
-          },
         }),
-        outlined: ({ theme }) => ({
+        outlined: () => ({
           borderWidth: '1.5px',
-          '&:hover': {
-            borderWidth: '1.5px',
-            backgroundColor:
-              theme.palette.mode === 'light'
-                ? 'rgba(21, 101, 192, 0.05)'
-                : 'rgba(66, 165, 245, 0.08)',
-          },
-        }),
-        text: ({ theme }) => ({
-          '&:hover': {
-            backgroundColor:
-              theme.palette.mode === 'light'
-                ? 'rgba(21, 101, 192, 0.06)'
-                : 'rgba(255, 255, 255, 0.06)',
-          },
         }),
         sizeLarge: {
           padding: '0.625rem 1.375rem',
@@ -203,17 +169,16 @@ export const muiTheme = createTheme({
       styleOverrides: {
         root: ({ theme }) => ({
           borderRadius: shape.borderRadius,
-          transition:
-            'transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease',
-          '&:hover': {
-            transform: 'translateY(-1px)',
+          transition: 'none',
+          '&:hover:not(:disabled)': {
+            animation: 'app-btn-lift 0.34s cubic-bezier(0.34, 1.35, 0.64, 1) forwards',
             backgroundColor:
               theme.palette.mode === 'light'
                 ? colors.neutral[100]
                 : 'rgba(255, 255, 255, 0.08)',
           },
-          '&:active': {
-            transform: 'translateY(0) scale(0.96)',
+          '&:active:not(:disabled)': {
+            animation: 'app-btn-press 0.14s ease forwards',
           },
         }),
       },

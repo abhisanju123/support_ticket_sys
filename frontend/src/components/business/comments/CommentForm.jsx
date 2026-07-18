@@ -43,7 +43,7 @@ export function CommentForm({
           type="submit"
           variant="contained"
           disabled={isSubmitting || !isFormComplete}
-          className={isSubmitting || !isFormComplete ? undefined : 'interactive-press'}
+          className={isSubmitting || !isFormComplete ? 'app-btn--submit' : 'app-btn--submit interactive-press'}
         >
           {isSubmitting ? 'Posting…' : submitLabel}
         </Button>

@@ -93,6 +93,20 @@
   --app-color-text-secondary: #757575;
   --app-color-focus-ring: rgba(21, 101, 192, 0.35);
 
+  /* Buttons */
+  --app-btn-submit-bg: linear-gradient(135deg, #1976d2 0%, #1565c0 52%, #0d47a1 100%);
+  --app-btn-submit-bg-hover: linear-gradient(135deg, #42a5f5 0%, #1e88e5 48%, #1565c0 100%);
+  --app-btn-submit-shadow: 0 4px 14px rgba(21, 101, 192, 0.28);
+  --app-btn-submit-shadow-hover: 0 8px 22px rgba(21, 101, 192, 0.38);
+  --app-btn-cancel-border: #cfd8dc;
+  --app-btn-cancel-text: #37474f;
+  --app-btn-cancel-bg: #ffffff;
+  --app-btn-cancel-bg-hover: #e3f2fd;
+  --app-btn-cancel-border-hover: #1565c0;
+  --app-btn-cancel-text-hover: #0d47a1;
+  --app-btn-disabled-bg: #e0e0e0;
+  --app-btn-disabled-text: #757575;
+
   /* Sidebar */
   --app-color-sidebar-bg: #f8fafc;
   --app-color-sidebar-active-bg: rgba(21, 101, 192, 0.1);
@@ -110,13 +124,25 @@
   --app-color-text-primary: #ffffff;
   --app-color-text-secondary: #b0b0b0;
   --app-color-focus-ring: rgba(66, 165, 245, 0.4);
-  --app-color-sidebar-bg: #171717;
-  --app-color-sidebar-active-bg: rgba(66, 165, 245, 0.16);
-  --app-color-sidebar-active-border: #42a5f5;
-  --app-color-sidebar-hover-bg: rgba(255, 255, 255, 0.06);
   --app-color-table-header: rgba(255, 255, 255, 0.04);
   --app-color-table-row-alt: rgba(255, 255, 255, 0.02);
   --app-shadow-elevated:
     0 1px 2px rgba(0, 0, 0, 0.2),
     0 4px 12px rgba(0, 0, 0, 0.24);
+  --app-btn-submit-bg: linear-gradient(135deg, #42a5f5 0%, #1e88e5 52%, #1565c0 100%);
+  --app-btn-submit-bg-hover: linear-gradient(135deg, #64b5f6 0%, #42a5f5 48%, #1e88e5 100%);
+  --app-btn-submit-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  --app-btn-submit-shadow-hover: 0 8px 24px rgba(66, 165, 245, 0.35);
+  --app-btn-cancel-border: rgba(255, 255, 255, 0.22);
+  --app-btn-cancel-text: #eceff1;
+  --app-btn-cancel-bg: #1e1e1e;
+  --app-btn-cancel-bg-hover: rgba(66, 165, 245, 0.12);
+  --app-btn-cancel-border-hover: #42a5f5;
+  --app-btn-cancel-text-hover: #90caf9;
+  --app-btn-disabled-bg: rgba(255, 255, 255, 0.12);
+  --app-btn-disabled-text: rgba(255, 255, 255, 0.38);
+  --app-color-sidebar-bg: #171717;
+  --app-color-sidebar-active-bg: rgba(66, 165, 245, 0.16);
+  --app-color-sidebar-active-border: #42a5f5;
+  --app-color-sidebar-hover-bg: rgba(255, 255, 255, 0.06);
 }

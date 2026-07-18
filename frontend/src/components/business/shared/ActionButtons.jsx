@@ -25,7 +25,7 @@ export function ActionButtons({
           variant="outlined"
           onClick={onCancel}
           disabled={isSubmitting}
-          className="interactive-press"
+          className="app-btn--cancel"
         >
           {cancelLabel}
         </Button>
@@ -55,7 +55,7 @@ export function ActionButtons({
             variant="contained"
             onClick={onSubmit}
             disabled={isSubmitDisabled}
-            className={isSubmitDisabled ? undefined : 'interactive-press'}
+            className={isSubmitDisabled ? 'app-btn--submit' : 'app-btn--submit interactive-press'}
           >
             {submitLabel}
           </Button>

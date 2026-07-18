@@ -96,7 +96,7 @@ export function RegisterForm({ onSubmit, isSubmitting = false }) {
           fullWidth
           size="large"
           disabled={isSubmitting || !isFormComplete}
-          className={isSubmitting || !isFormComplete ? undefined : 'interactive-press'}
+          className={isSubmitting || !isFormComplete ? 'app-btn--submit' : 'app-btn--submit interactive-press'}
         >
           {isSubmitting ? 'Creating account…' : 'Create account'}
         </Button>
