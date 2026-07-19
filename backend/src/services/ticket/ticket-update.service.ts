@@ -1,4 +1,4 @@
-import { assertCanEditTicket } from '../../authorization/ticket-access.js';
+import { assertCanEditTicket, assertValidAssignee } from '../../authorization/ticket-access.js';
 import { TICKET_PRIORITIES } from '../../enums/ticket-priority.enum.js';
 import type { ITicketRecord } from '../../interfaces/ticket.interface.js';
 import type { ITicketRepository } from '../../repositories/interfaces/ticket.repository.interface.js';
@@ -61,10 +61,7 @@ export class TicketUpdateService extends BaseService {
       if (input.assignedTo === null) {
         updateData.assignedTo = undefined;
       } else {
-        const assigneeExists = await this.userRepository.existsById(input.assignedTo);
-        if (!assigneeExists) {
-          throw new NotFoundException('Assigned user not found');
-        }
+        await assertValidAssignee(this.userRepository, String(input.assignedTo));
         updateData.assignedTo = this.toObjectId(input.assignedTo);
       }
     }

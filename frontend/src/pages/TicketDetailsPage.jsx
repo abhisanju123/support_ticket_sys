@@ -12,7 +12,7 @@ import { EmptyTicketsIllustration, NotFoundState } from '../components/common';
 import { ROUTE_PATHS } from '../constants';
 import { usePermissions } from '../features/auth/hooks/usePermissions.js';
 import { useGetCommentsQuery, useCreateCommentMutation } from '../features/comments';
-import { useGetUsersQuery } from '../features/users/api/usersApi.js';
+import { useCachedUsersQuery } from '../features/users/api/usersApi.js';
 import { TicketActivityTimeline } from '../features/tickets/components/TicketActivityTimeline.jsx';
 import { TicketCommentsSection } from '../features/tickets/components/TicketCommentsSection.jsx';
 import { TicketDetailsInfo } from '../features/tickets/components/TicketDetailsInfo.jsx';
@@ -40,7 +40,7 @@ export function TicketDetailsPage() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const { data: ticket, isLoading, isError, error, refetch } = useGetTicketByIdQuery(ticketId);
   const { data: comments = [], isLoading: isCommentsLoading } = useGetCommentsQuery({ ticketId });
-  const { data: users = [] } = useGetUsersQuery();
+  const { data: users = [] } = useCachedUsersQuery();
   const [updateStatus, { isLoading: isUpdatingStatus }] = useUpdateTicketStatusMutation();
   const [deleteTicket, { isLoading: isDeleting }] = useDeleteTicketMutation();
   const [createComment, { isLoading: isCreatingComment }] = useCreateCommentMutation();

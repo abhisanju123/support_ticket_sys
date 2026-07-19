@@ -6,6 +6,7 @@ import {
   canDeleteTicket,
   canEditTicket,
   canViewTicket,
+  filterAssignableUsers,
   mustCreateTicketAsSelf,
 } from '../utils/ticketAccess.js';
 
@@ -49,5 +50,15 @@ describe('frontend permissions', () => {
     expect(canChangeTicketStatus(UserRole.SUPPORT_AGENT)).toBe(true);
     expect(mustCreateTicketAsSelf(UserRole.EMPLOYEE)).toBe(true);
     expect(mustCreateTicketAsSelf(UserRole.ADMIN)).toBe(false);
+  });
+
+  it('filters assignable users to status-capable roles only', () => {
+    const users = [
+      { _id: '1', role: UserRole.EMPLOYEE, name: 'Employee' },
+      { _id: '2', role: UserRole.SUPPORT_AGENT, name: 'Agent' },
+      { _id: '3', role: UserRole.ADMIN, name: 'Admin' },
+    ];
+
+    expect(filterAssignableUsers(users).map((user) => user._id)).toEqual(['2', '3']);
   });
 });

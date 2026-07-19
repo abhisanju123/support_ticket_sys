@@ -1,4 +1,4 @@
-import { assertEmployeeCreatesOwnTicket } from '../../authorization/ticket-access.js';
+import { assertEmployeeCreatesOwnTicket, assertValidAssignee } from '../../authorization/ticket-access.js';
 import { DEFAULT_TICKET_STATUS } from '../../constants/enum.constants.js';
 import { TICKET_PRIORITIES } from '../../enums/ticket-priority.enum.js';
 import { UserRole } from '../../enums/user-role.enum.js';
@@ -49,10 +49,7 @@ export class TicketCreationService extends BaseService {
     }
 
     if (input.assignedTo) {
-      const assigneeExists = await this.userRepository.existsById(input.assignedTo);
-      if (!assigneeExists) {
-        throw new NotFoundException('Assigned user not found');
-      }
+      await assertValidAssignee(this.userRepository, String(input.assignedTo));
     }
 
     return this.ticketRepository.create({

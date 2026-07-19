@@ -18,7 +18,7 @@ import Typography from '@mui/material/Typography';
 import { buildTicketDetailsPath } from '../../../constants/routes.constants.js';
 import { formatRelativeTime } from '../../tickets/utils/ticketFormatters.js';
 import {
-  useGetNotificationsQuery,
+  useCachedNotificationsQuery,
   useMarkAllNotificationsReadMutation,
   useMarkNotificationReadMutation,
 } from '../../notifications/index.js';
@@ -31,18 +31,19 @@ const TYPE_ICONS = {
 
 export function NotificationsMenu() {
   const navigate = useNavigate();
-  const { data: items = [], isLoading } = useGetNotificationsQuery(undefined, {
-    pollingInterval: 30_000,
+  const [anchorEl, setAnchorEl] = useState(null);
+  const { data: items = [], isLoading, refetch } = useCachedNotificationsQuery({
+    pollingInterval: anchorEl ? 30_000 : 0,
   });
   const [markNotificationRead] = useMarkNotificationReadMutation();
   const [markAllNotificationsRead] = useMarkAllNotificationsReadMutation();
-  const [anchorEl, setAnchorEl] = useState(null);
 
   const unreadItems = useMemo(() => items.filter((item) => !item.read), [items]);
   const unreadCount = unreadItems.length;
 
   const handleOpen = (event) => {
     setAnchorEl(event.currentTarget);
+    refetch();
   };
 
   const handleClose = () => {

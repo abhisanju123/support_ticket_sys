@@ -1,8 +1,9 @@
 import Typography from '@mui/material/Typography';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import { TicketForm, TicketFormReadOnlySection } from '../../../components/business/tickets/form/TicketForm.jsx';
-import { useGetUsersQuery } from '../../users/api/usersApi.js';
+import { filterAssignableUsers } from '../../auth/utils/ticketAccess.js';
+import { useCachedUsersQuery } from '../../users/api/usersApi.js';
 import {
   TICKET_PRIORITIES,
   TICKET_PRIORITY_LABELS,
@@ -32,9 +33,10 @@ const EDIT_REQUIRED_FIELDS = ['title', 'description', 'priority'];
 
 export function EditTicketForm({ ticket, onSubmit, onCancel, isSubmitting = false }) {
   const ticketId = getTicketRouteId(ticket);
-  const { data: users = [], isLoading: usersLoading } = useGetUsersQuery();
-  const validUserIds = useMemo(() => users.map((user) => user._id), [users]);
-  const schema = useMemo(() => createEditTicketFormSchema(validUserIds), [validUserIds]);
+  const { data: users = [], isLoading: usersLoading } = useCachedUsersQuery();
+  const assignableUsers = useMemo(() => filterAssignableUsers(users), [users]);
+  const assigneeUserIds = useMemo(() => assignableUsers.map((user) => user._id), [assignableUsers]);
+  const schema = useMemo(() => createEditTicketFormSchema(assigneeUserIds), [assigneeUserIds]);
   const initialValues = useMemo(() => buildDefaultValues(ticket), [ticketId]);
 
   const { form, submitHandler, globalError, clearGlobalError, isFormComplete } = useValidatedForm({
@@ -52,6 +54,18 @@ export function EditTicketForm({ ticket, onSubmit, onCancel, isSubmitting = fals
   } = form;
 
   const values = watch();
+
+  useEffect(() => {
+    if (usersLoading || !values.assignedTo) {
+      return;
+    }
+
+    const isAssignable = assigneeUserIds.includes(values.assignedTo);
+
+    if (!isAssignable) {
+      setValue('assignedTo', '', { shouldValidate: true });
+    }
+  }, [usersLoading, assigneeUserIds, values.assignedTo, setValue]);
 
   const readOnlySection = (
     <TicketFormReadOnlySection>
@@ -78,6 +92,7 @@ export function EditTicketForm({ ticket, onSubmit, onCancel, isSubmitting = fals
       onFieldChange={(field, value) => setValue(field, value, { shouldValidate: true })}
       priorityOptions={priorityOptions}
       users={users}
+      assignableUsers={assignableUsers}
       usersLoading={usersLoading}
       readOnlySection={readOnlySection}
       onSubmit={submitHandler}

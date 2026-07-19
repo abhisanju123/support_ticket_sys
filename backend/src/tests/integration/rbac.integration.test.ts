@@ -55,23 +55,23 @@ describeIntegration('RBAC integration', () => {
         description: 'Created during RBAC integration test',
         priority: 'medium',
         createdBy: employeeAuth.user._id,
-        assignedTo: employeeAuth.user._id,
+        assignedTo: agentAuth.user._id,
       });
 
     expect(ownTicket.status).toBe(201);
 
-    const foreignTicket = await request(app)
+    const invalidAssigneeTicket = await request(app)
       .post('/api/tickets')
       .set(authHeader(employeeAuth.token))
       .send({
-        title: 'Employee foreign ticket',
+        title: 'Employee invalid assignee',
         description: 'Should be rejected',
         priority: 'low',
-        createdBy: alternateEmployeeId,
+        createdBy: employeeAuth.user._id,
         assignedTo: alternateEmployeeId,
       });
 
-    expect(foreignTicket.status).toBe(403);
+    expect(invalidAssigneeTicket.status).toBe(422);
   });
 
   it('denies ticket delete for employees and agents', async () => {
@@ -117,7 +117,7 @@ describeIntegration('RBAC integration', () => {
         description: 'Ticket for RBAC status checks',
         priority: 'medium',
         createdBy: employeeAuth.user._id,
-        assignedTo: employeeAuth.user._id,
+        assignedTo: agentAuth.user._id,
       });
 
     expect(created.status).toBe(201);

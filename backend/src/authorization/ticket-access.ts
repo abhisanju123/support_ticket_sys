@@ -1,6 +1,9 @@
 import { TERMINAL_TICKET_STATUSES, TicketStatus } from '../enums/ticket-status.enum.js';
+import { Permission } from '../enums/permission.enum.js';
 import { UserRole } from '../enums/user-role.enum.js';
-import { ForbiddenException, NotFoundException } from '../exceptions/index.js';
+import { ForbiddenException, NotFoundException, ValidationException } from '../exceptions/index.js';
+import type { IUserRepository } from '../repositories/interfaces/user.repository.interface.js';
+import { hasPermission } from './permission-check.js';
 import type { AuthenticatedUser } from '../types/auth.types.js';
 import type { ObjectId } from '../types/domain.types.js';
 
@@ -71,4 +74,19 @@ export function getTicketListScope(user: AuthenticatedUser): { accessibleToUserI
   }
 
   return { accessibleToUserId: user.id };
+}
+
+export async function assertValidAssignee(
+  userRepository: IUserRepository,
+  assigneeId: string,
+): Promise<void> {
+  const assignee = await userRepository.findById(assigneeId);
+
+  if (!assignee) {
+    throw new NotFoundException('Assigned user not found');
+  }
+
+  if (!hasPermission(assignee.role, Permission.TICKET_CHANGE_STATUS)) {
+    throw new ValidationException('Tickets can only be assigned to support agents or admins');
+  }
 }

@@ -71,3 +71,7 @@ export function canCommentOnTicket(user, ticket) {
 export function mustCreateTicketAsSelf(role) {
   return role === UserRole.EMPLOYEE;
 }
+
+export function filterAssignableUsers(users = []) {
+  return users.filter((user) => canChangeTicketStatus(user.role));
+}

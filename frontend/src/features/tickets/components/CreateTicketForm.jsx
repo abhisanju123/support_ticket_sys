@@ -2,8 +2,9 @@ import { useEffect, useMemo } from 'react';
 
 import { TicketForm } from '../../../components/business/tickets/form/TicketForm.jsx';
 import { useAuth } from '../../auth/hooks/useAuth.js';
+import { filterAssignableUsers } from '../../auth/utils/ticketAccess.js';
 import { usePermissions } from '../../auth/hooks/usePermissions.js';
-import { useGetUsersQuery } from '../../users/api/usersApi.js';
+import { useCachedUsersQuery } from '../../users/api/usersApi.js';
 import { TICKET_PRIORITIES, TICKET_PRIORITY_LABELS } from '../constants/ticket.constants.js';
 import {
   createCreateTicketFormSchema,
@@ -28,9 +29,14 @@ export function CreateTicketForm({ onSubmit, onCancel, isSubmitting = false }) {
   const { user } = useAuth();
   const { mustCreateTicketAsSelf } = usePermissions();
   const lockReporter = mustCreateTicketAsSelf();
-  const { data: users = [], isLoading: usersLoading } = useGetUsersQuery();
-  const validUserIds = useMemo(() => users.map((entry) => entry._id), [users]);
-  const schema = useMemo(() => createCreateTicketFormSchema(validUserIds), [validUserIds]);
+  const { data: users = [], isLoading: usersLoading } = useCachedUsersQuery();
+  const assignableUsers = useMemo(() => filterAssignableUsers(users), [users]);
+  const reporterUserIds = useMemo(() => users.map((entry) => entry._id), [users]);
+  const assigneeUserIds = useMemo(() => assignableUsers.map((entry) => entry._id), [assignableUsers]);
+  const schema = useMemo(
+    () => createCreateTicketFormSchema(reporterUserIds, assigneeUserIds),
+    [reporterUserIds, assigneeUserIds],
+  );
 
   const { form, submitHandler, globalError, clearGlobalError, isFormComplete } = useValidatedForm({
     schema,
@@ -84,6 +90,7 @@ export function CreateTicketForm({ onSubmit, onCancel, isSubmitting = false }) {
       onFieldChange={(field, value) => setValue(field, value, { shouldValidate: true })}
       priorityOptions={priorityOptions}
       users={users}
+      assignableUsers={assignableUsers}
       usersLoading={usersLoading}
       showReporterPicker={!lockReporter}
       onSubmit={submitHandler}

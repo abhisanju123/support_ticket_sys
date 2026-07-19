@@ -5,7 +5,7 @@ import { useEffect, useMemo } from 'react';
 import { CommentForm } from '../../../components/business/comments/CommentForm.jsx';
 import { CommentList } from '../../../components/business/comments/CommentList.jsx';
 import { useAuth } from '../../auth/hooks/useAuth.js';
-import { useGetUsersQuery } from '../../users/api/usersApi.js';
+import { useCachedUsersQuery } from '../../users/api/usersApi.js';
 import {
   formatRelativeTime,
   formatTicketDate,
@@ -24,7 +24,7 @@ const defaultValues = {
 
 export function TicketCommentsSection({ comments, onAddComment, isSubmitting = false, canComment = true }) {
   const { user } = useAuth();
-  const { data: users = [], isLoading: usersLoading } = useGetUsersQuery();
+  const { data: users = [], isLoading: usersLoading } = useCachedUsersQuery();
   const validUserIds = useMemo(() => users.map((user) => user._id), [users]);
   const usersById = useMemo(() => new Map(users.map((user) => [user._id, user])), [users]);
   const schema = useMemo(() => createCommentFormSchema(validUserIds), [validUserIds]);

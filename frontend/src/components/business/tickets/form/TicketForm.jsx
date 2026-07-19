@@ -27,6 +27,7 @@ export function TicketForm({
   onFieldChange,
   priorityOptions = [],
   users = [],
+  assignableUsers = users,
   usersLoading = false,
   showReporterPicker = true,
   readOnlySection = null,
@@ -124,9 +125,10 @@ export function TicketForm({
                   <AssignedUserDropdown
                     value={values.assignedTo ?? ''}
                     onChange={(event) => onFieldChange?.('assignedTo', event.target.value)}
-                    users={users}
+                    users={assignableUsers}
                     isLoading={usersLoading}
                     error={errors.assignedTo}
+                    helperText="Select a support agent or admin"
                     required
                   />
                 </Box>
@@ -162,11 +164,11 @@ export function TicketForm({
             <AssignedUserDropdown
               value={values.assignedTo ?? ''}
               onChange={(event) => onFieldChange?.('assignedTo', event.target.value)}
-              users={users}
+              users={assignableUsers}
               isLoading={usersLoading}
               allowEmpty
               error={errors.assignedTo}
-              helperText="Optional — leave empty to unassign"
+              helperText="Optional — support agent or admin only"
             />
           </Box>
         )}
