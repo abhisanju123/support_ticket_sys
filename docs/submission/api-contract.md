@@ -170,7 +170,7 @@ Public URLs and API path param `:id` use **sequential `ticketNumber`** (e.g. `1`
 | `sortBy`, `sortOrder` | string | e.g. `createdAt`, `desc` |
 | `status`, `priority` | enum | Filters |
 | `assignedTo`, `createdBy` | ObjectId | Filters |
-| `keyword` | string | Title/description search |
+| `keyword` | string | Cross-field search: title, description, assignee/reporter name or email, priority, status, date, ticket number |
 
 ### Response `200`
 
@@ -384,6 +384,63 @@ Transitions must match §1.4 in full contract (e.g. `open` → `in_progress` | `
 | **Method** | `GET` |
 | **Path** | `/api/tickets/:ticketId/comments` |
 | **Purpose** | Paginated comments for a ticket |
+| **Auth** | Bearer JWT |
+
+---
+
+## Endpoint: List Notifications
+
+| | |
+|-|-|
+| **Method** | `GET` |
+| **Path** | `/api/notifications` |
+| **Purpose** | Unread in-app notifications for current user (newest first, limit 10) |
+| **Auth** | Bearer JWT |
+
+### Response `200`
+
+`data` = array of notification objects (`_id`, `type`, `message`, `ticketNumber`, `ticketTitle`, `read`, `createdAt`).
+
+---
+
+## Endpoint: Unread Notification Count
+
+| | |
+|-|-|
+| **Method** | `GET` |
+| **Path** | `/api/notifications/unread-count` |
+| **Purpose** | Lightweight badge count for bell icon |
+| **Auth** | Bearer JWT |
+
+### Response `200`
+
+```json
+{
+  "success": true,
+  "data": { "count": 3 }
+}
+```
+
+---
+
+## Endpoint: Mark Notification Read
+
+| | |
+|-|-|
+| **Method** | `PATCH` |
+| **Path** | `/api/notifications/:id/read` |
+| **Purpose** | Mark single notification as read |
+| **Auth** | Bearer JWT |
+
+---
+
+## Endpoint: Mark All Notifications Read
+
+| | |
+|-|-|
+| **Method** | `PATCH` |
+| **Path** | `/api/notifications/read-all` |
+| **Purpose** | Mark all notifications for current user as read |
 | **Auth** | Bearer JWT |
 
 ---

@@ -6,14 +6,17 @@
 - [x] User can log in and receive a JWT; token is sent on subsequent API requests.
 - [x] User can log out (client-side token clear) and session expires per `JWT_EXPIRES_IN`.
 - [x] Dashboard displays ticket counts (total, open, in progress, resolved, closed, cancelled).
-- [x] Ticket list supports pagination, column sorting, keyword search, and status/priority filters.
-- [x] User can create a ticket with title, description, priority, createdBy, and assignedTo.
+- [x] Ticket list supports pagination, column sorting, cross-field keyword search, and status/priority filters.
+- [x] User can create a ticket with title, description, priority, createdBy, and assignedTo (assignee limited to admin/support_agent).
 - [x] User can open ticket details by sequential ticket number in the URL.
 - [x] User can edit ticket title, description, priority, and assignee (when not closed).
 - [x] User can change ticket status only through allowed transitions.
 - [x] User can add comments on the ticket details page.
+- [x] In-app bell notifications with unread badge, mark read, and role-based routing.
+- [x] Bell unread count updates correctly when switching users (logout/login).
+- [x] Employees see only their own/assigned tickets; admin and support_agent see all.
 - [x] User can delete a ticket with confirmation dialog.
-- [x] Navigation: sidebar, breadcrumbs, header with search (Ctrl+K command palette).
+- [x] Navigation: sidebar, breadcrumbs, header with search (Ctrl+K command palette) and notifications bell.
 
 ## Validation
 
@@ -34,10 +37,11 @@
 
 ## Testing
 
-- [x] Backend unit tests: `auth.service.test.ts`, `password.schema.test.ts`.
+- [x] Backend unit tests: auth, password schema, RBAC, notification routing, keyword search, ticket access.
+- [x] Backend integration test: RBAC ticket visibility and assignee rules.
 - [ ] Frontend component tests (not implemented — manual QA via dev server).
 - [ ] API integration tests with Supertest (infrastructure present, limited coverage).
-- [x] Manual end-to-end flows verified: auth, CRUD tickets, status workflow, comments.
+- [x] Manual end-to-end flows verified: auth, CRUD tickets, status workflow, comments, notifications, user switch.
 
 ## Documentation
 

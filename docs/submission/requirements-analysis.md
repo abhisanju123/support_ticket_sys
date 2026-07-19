@@ -18,7 +18,7 @@ Employees need a single place to report issues (tickets), see who is working on 
 | -- | ----------- |
 | FR-01 | Users can register and log in with email/password (JWT). |
 | FR-02 | Authenticated users can view a dashboard with ticket statistics. |
-| FR-03 | Users can list tickets with pagination, sorting, keyword search, and filters (status, priority, assignee). |
+| FR-03 | Users can list tickets with pagination, sorting, cross-field keyword search, and filters (status, priority, assignee). |
 | FR-04 | Users can create a ticket with title, description, priority, reporter (`createdBy`), and assignee (`assignedTo`). |
 | FR-05 | Users can view ticket details including status, priority, metadata, and comments. |
 | FR-06 | Users can edit ticket fields (title, description, priority, assignee) except when status is **closed**. |
@@ -27,6 +27,9 @@ Employees need a single place to report issues (tickets), see who is working on 
 | FR-09 | Users can delete tickets (with confirmation). |
 | FR-10 | Ticket URLs and API identifiers use sequential **ticket numbers** (1, 2, 3…) for readability. |
 | FR-11 | User dropdowns list employees by name; seeded sample users available for development. |
+| FR-12 | Users receive in-app bell notifications for relevant ticket activity (comments, updates, status changes). |
+| FR-13 | Assignee field only offers users who can change ticket status (`admin`, `support_agent`). |
+| FR-14 | Employees see only tickets they created or are assigned to; staff roles see all tickets. |
 
 ---
 
@@ -50,7 +53,7 @@ Employees need a single place to report issues (tickets), see who is working on 
 
 1. **Single organization** — all users are internal employees; no multi-tenant isolation required.
 2. **JWT auth is sufficient** — no OAuth/SSO in scope for this assessment.
-3. **Role-based UI restrictions are minimal** — all authenticated users can perform core ticket operations; fine-grained RBAC is a future enhancement.
+3. **Role-based access is implemented for ticket visibility, assignee rules, and key permissions** — not every API route is individually role-gated.
 4. **Comments are public to authenticated users** — internal-only comment flag exists in DB design but is not fully exposed in UI.
 5. **MongoDB** is the system of record; no event sourcing or separate read models.
 6. **English-only** UI and API messages.
@@ -62,7 +65,7 @@ Employees need a single place to report issues (tickets), see who is working on 
 
 1. Should **cancelled** tickets be editable, or only **closed**? (Currently: closed tickets are locked; cancelled behavior may differ.)
 2. Should employees only see tickets they created or are assigned to, or all tickets?
-3. Is **email notification** on assignment/status change in scope?
+3. Is **email notification** on assignment/status change in scope? *(Delivered: in-app bell only; email is future work.)*
 4. Should **on_hold** status be reachable from the UI given API transition rules?
 5. Are **file attachments** required on tickets or comments?
 6. What is the **password policy** for production vs. dev seed users?
@@ -78,6 +81,7 @@ Employees need a single place to report issues (tickets), see who is working on 
 | Invalid status transition (e.g. `open` → `closed`) | `400 Bad Request` with business rule message. |
 | Assign ticket to non-existent user | `404 Not Found`. |
 | Empty required form fields | Submit button disabled; server returns `422` if bypassed. |
+| Switch user without page reload | Bell badge must show new user's unread count (RTK cache scoped per user + reset on logout). |
 | MongoDB Atlas IP not whitelisted | Connection fails with retry; dev can use local MongoDB. |
 | Stale RTK Query cache after mutation | Cache tags invalidate list/detail/dashboard. |
 | Ticket list with no results | Empty state with guidance to create or clear filters. |

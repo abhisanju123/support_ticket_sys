@@ -4,7 +4,8 @@
 
 Testing covers:
 
-- **Backend unit logic** — auth service, password validation schema
+- **Backend unit logic** — auth service, password schema, RBAC permissions, notification routing, keyword search, ticket access
+- **Backend integration** — RBAC ticket visibility and assignee validation
 - **Manual end-to-end** — full user flows through React UI against live API
 - **Static analysis** — ESLint, TypeScript `typecheck`, Prettier on backend
 
@@ -23,6 +24,11 @@ Testing covers:
 | ---- | -------------- |
 | `backend/src/tests/unit/auth.service.test.ts` | Login/register logic, password hashing, JWT payload |
 | `backend/src/tests/unit/password.schema.test.ts` | Password Zod schema rules (length, charset, special chars) |
+| `backend/src/tests/unit/permission-check.test.ts` | Role permission matrix |
+| `backend/src/tests/unit/ticket-access.test.ts` | Ticket visibility and assignee validation |
+| `backend/src/tests/unit/notification-routing.test.ts` | Bell notification recipient routing by role |
+| `backend/src/tests/unit/ticket-keyword-search.test.ts` | Cross-field keyword search helper |
+| `backend/src/tests/integration/rbac.integration.test.ts` | RBAC rules against live API routes |
 
 **Run:**
 
@@ -55,10 +61,11 @@ npm test
 
 | Area | Status |
 | ---- | ------ |
-| Supertest + Express app | Dependency installed, not wired to full suite |
+| Supertest + Express app | Wired for RBAC integration test |
 | Ticket CRUD flow | Manual via Postman / UI |
 | Status transition rules | Manual + service-level reasoning |
-| Auth middleware | Covered indirectly via auth service unit tests |
+| Notification routing | Unit tests + manual bell UI |
+| Auth middleware | Covered via auth service unit tests and RBAC integration |
 
 **Recommended integration tests:**
 
@@ -80,6 +87,8 @@ npm test
 | Invalid login | Manual: toast with error message |
 | 404 ticket | Manual: navigate to `/tickets/99999` |
 | Pagination boundary | Manual: last page, empty list |
+| Bell count after user switch | Manual: logout/login as different role; badge shows correct count |
+| Notification list vs badge sync | Manual: mark all read; menu and badge agree |
 | MongoDB connection failure | Observed during Atlas IP whitelist debugging |
 
 ---
@@ -93,7 +102,7 @@ npm test
 | E2E (Playwright/Cypress) | No browser automation setup |
 | Repository layer mocks | Services tested indirectly; repos thin wrappers |
 | Comment CRUD automated tests | Manual verification on details page |
-| Role-based access control | Roles stored but not enforced per-endpoint in MVP |
+| Role-based access control | Partial — ticket visibility, assignee rules, permissions; not every endpoint role-gated |
 | Concurrent ticket number assignment | Low risk; counter uses atomic MongoDB operation |
 | Accessibility (axe) | Not in assessment scope |
 
@@ -103,7 +112,10 @@ npm test
 
 - **Seed script:** `npm run seed` in `backend/`
 - **10 users** with default password `Password123!`
-- Example login: `john@example.com` / `Password123!`
+- Example logins (password `Password123!`):
+  - Employee: `abhishek@example.com`
+  - Admin: `jane@example.com`
+  - Agent: `john@example.com`
 
 ---
 

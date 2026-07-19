@@ -8,7 +8,7 @@
 | **Primary AI Tool Used** | Cursor (AI-assisted IDE) |
 | **Project Option Selected** | Support Ticket Management System |
 | **Assessment Start Date** | July 2026 |
-| **Submission Date** | July 18, 2026 |
+| **Submission Date** | July 19, 2026 |
 
 ---
 
@@ -17,7 +17,7 @@
 Built a full-stack **Support Ticket Management System** for internal employees to create, assign, track, update, and resolve support tickets. The solution includes:
 
 - **Backend REST API** with layered architecture (routes → controllers → services → repositories → MongoDB)
-- **React SPA** with dashboard, ticket list (search/filter/sort/pagination), create/edit/details flows, comments, and JWT authentication
+- **React SPA** with dashboard, ticket list (cross-field search/filter/sort/pagination), create/edit/details flows, comments, in-app bell notifications, and JWT authentication
 - **Fixed API contract** between frontend and backend
 - **Sequential ticket numbers** in URLs (`/tickets/1`, `/tickets/2`, …)
 - **Status workflow** with validated transitions and closed-ticket edit restrictions
@@ -69,10 +69,14 @@ cp .env.example .env     # VITE_API_BASE_URL=http://localhost:3000
 npm run dev              # http://localhost:5173
 ```
 
-### Default dev login (after seed)
+### Default dev logins (after seed, password `Password123!`)
 
-- Email: `john@example.com`
-- Password: `Password123!`
+| Role | Email |
+| ---- | ----- |
+| Employee | `abhishek@example.com` |
+| Employee | `emily@example.com` |
+| Admin | `jane@example.com` |
+| Support agent | `john@example.com` |
 
 ### Key environment variables
 

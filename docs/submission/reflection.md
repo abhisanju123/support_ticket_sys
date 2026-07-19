@@ -5,10 +5,10 @@
 A production-style **Support Ticket Management System** monorepo:
 
 - **Backend:** Express 5 + TypeScript REST API with MongoDB, JWT auth, Zod validation, layered architecture, seed data, and sequential ticket numbers.
-- **Frontend:** React 19 SPA with dashboard, searchable/filterable ticket table, create/edit/details flows, comments, command palette, auth pages, and polished form/button UX.
+- **Frontend:** React 19 SPA with dashboard, searchable/filterable ticket table, create/edit/details flows, comments, in-app bell notifications, command palette, auth pages, and polished form/button UX.
 - **Documentation:** API contract, database design, AI prompt archives, and this submission pack.
 
-The system supports the full ticket lifecycle from creation through resolution and closure, with comments and dashboard visibility.
+The system supports the full ticket lifecycle from creation through resolution and closure, with comments, role-based visibility, in-app notifications, and dashboard visibility.
 
 ---
 
@@ -19,7 +19,7 @@ The system supports the full ticket lifecycle from creation through resolution a
 | **Requirements** | Drafted requirement analysis and acceptance criteria from project goals |
 | **Design** | Generated architecture notes, folder structures, layer diagrams |
 | **Implementation** | Phased prompts in `PROMPTS.md` / `FRONTEND_PROMPTS.md` for scaffold + features |
-| **Debugging** | Diagnosed MongoDB Atlas, form reset, MUI select prefill issues |
+| **Debugging** | Diagnosed MongoDB Atlas, form reset, MUI select prefill, RTK notification cache on user switch |
 | **Testing** | Auth/password unit tests scaffolded with AI assistance |
 | **Documentation** | Populated submission templates from real codebase state |
 | **Review** | AI code review suggestions; human filtered for scope and correctness |
@@ -43,16 +43,16 @@ Primary tool: **Cursor** (agent mode with file edits, terminal diagnostics, and 
 1. **Over-aggressive `useEffect` resets** — Suggested/accepted `reset(ticket)` on full object dependency, causing edit form to revert while typing (fixed manually).
 2. **Accidental export removal** — Adding `isTicketEditable` removed `OBJECT_ID_REGEX` export (caught at runtime).
 3. **Misleading SSL errors** — Initially looked like TLS/code bug; was Atlas IP whitelist (AI helped diagnose but first instinct was code changes).
-4. **Occasional scope creep** — Proposed refactors unrelated to current task; rejected per minimal-diff rule.
-5. **Assumed `.env.local`** — Log messages referenced dotenv paths not always present in project.
+4. **RTK Query cache across auth changes** — Notification count reused wrong cache entry after user switch; fixed with per-user cache scope + logout reset.
+5. **Occasional scope creep** — Proposed refactors unrelated to current task; rejected per minimal-diff rule.
 
 ---
 
 ## How I Validated AI Output
 
 1. **Ran the app** — `npm run dev` on backend and frontend after each major change.
-2. **Manual UI flows** — Login, create ticket, edit, status change, comment, delete.
-3. **Backend tests** — `npm test` for auth and password schema.
+2. **Manual UI flows** — Login, create ticket, edit, status change, comment, delete, bell notifications, user switch.
+3. **Backend tests** — `npm test` for auth, password, RBAC, notification routing, keyword search, ticket access.
 4. **Lint/typecheck** — ESLint and `tsc --noEmit` on backend.
 5. **Read generated code** — Verified business rules (status transitions, closed edit guard) against `API_CONTRACT.md`.
 6. **Network diagnostics** — DNS, TCP, public IP checks for MongoDB issues (not blind env changes).
@@ -62,10 +62,10 @@ Primary tool: **Cursor** (agent mode with file edits, terminal diagnostics, and 
 
 ## What I Would Improve Next
 
-1. **Automated tests** — Supertest API integration suite + Vitest component tests for forms.
-2. **Role-based authorization** — Restrict delete/status change by `support_agent` / `admin`.
-3. **Real-time updates** — WebSockets or polling for ticket list on multi-user teams.
-4. **Email notifications** — On assignment and status change.
+1. **Automated tests** — Expanded Supertest integration suite + Vitest component tests for forms and notification hooks.
+2. **Deeper RBAC** — Role-gate every endpoint beyond current ticket visibility and assignee rules.
+3. **Real-time updates** — WebSockets or shorter polling for ticket list on multi-user teams.
+4. **Email notifications** — Delivery alongside in-app bell (assignment, status change).
 5. **Attachment support** — S3/gridfs for ticket evidence files.
 6. **CI pipeline** — GitHub Actions: lint, test, build on PR.
 7. **Accessibility audit** — Keyboard nav, ARIA on tables and modals.

@@ -152,3 +152,97 @@ Assigned user dropdown empty despite ticket having assignee.
 ### Final Fix
 
 `resolveTicketUserId()` in `ticketFormatters.js`; `String(user._id) === String(value)` in `UserSelectField.jsx`.
+
+---
+
+## Issue 6 — Bell notification badge stale after switching users
+
+### Problem
+
+After logging out as one user and logging in as another (e.g. employee → admin), the bell icon showed **no unread count** or the **previous user's count**.
+
+### How I Investigated
+
+1. Confirmed backend `/notifications/unread-count` returns correct count per JWT user.
+2. Traced `useUnreadNotificationCountQuery` — RTK Query cached under a single key (`undefined`), not per user.
+3. Noted `refetchOnMountOrArgChange: false` and 60s polling — new session could reuse stale cache until poll.
+4. Logout (`clearCredentials`) did not reset RTK Query API state.
+
+### How AI Helped
+
+- Identified RTK cache key as root cause when auth user changes without full page reload.
+- Suggested scoping cache by `userId` argument and resetting API state on logout.
+
+### What I Validated
+
+- Employee login → agent login shows agent's unread count immediately.
+- Logout clears cached ticket/notification data (no cross-user leak).
+- Mark read / mark all read optimistic updates target correct user's cache scope.
+
+### Final Fix
+
+- `notificationsApi.js`: pass `userId` as RTK Query arg for count + list endpoints (not sent to API).
+- `NotificationsMenu.jsx`: pass `user._id` into notification hooks; skip when unauthenticated.
+- `apiListener.js`: dispatch `baseApi.util.resetApiState()` on `clearCredentials`.
+
+**Files:** `notificationsApi.js`, `NotificationsMenu.jsx`, `apiListener.js`
+
+---
+
+## Issue 7 — Notification list empty while badge showed unread count
+
+### Problem
+
+Bell badge displayed a positive count, but opening the menu showed "You're all caught up."
+
+### How I Investigated
+
+1. Compared `getUnreadNotificationCount` vs `getNotifications` cache entries.
+2. Found mark-all-read optimistic update zeroed count but left stale list cache (or vice versa).
+3. Menu did not refetch list on open when cached empty array existed.
+
+### How AI Helped
+
+- Split count and list into separate endpoints/tags with targeted invalidation.
+- Added `refetch()` when bell menu opens.
+
+### What I Validated
+
+- Badge count and menu items stay in sync after mark read / mark all read.
+- Opening bell always shows current unread items.
+
+### Final Fix
+
+- Separate `GET /notifications/unread-count` endpoint for badge.
+- Refetch list on menu open; invalidate both count and list tags on ticket/comment mutations.
+
+**Files:** `notification.routes.ts`, `notificationsApi.js`, `NotificationsMenu.jsx`
+
+---
+
+## Issue 8 — Ticket search only matched title and description
+
+### Problem
+
+Search box did not find tickets by assignee name, status label, priority, date, or ticket number.
+
+### How I Investigated
+
+1. Read `TicketSearchFilterService` — keyword applied only to title/description regex.
+2. Compared with UI placeholder promising broader search.
+
+### How AI Helped
+
+- Implemented `ticket-keyword-search.helper.ts` with user lookup, enum label matching, date parsing, and ticket number matching.
+
+### What I Validated
+
+- Search by assignee name, `high` priority, `in progress` status, `2026`, and ticket `#` works.
+- Backend unit tests in `ticket-keyword-search.test.ts`.
+
+### Final Fix
+
+- Cross-field search helper integrated into `TicketSearchFilterService`.
+- Updated search placeholder in `TicketSearchBox.jsx`.
+
+**Files:** `ticket-keyword-search.helper.ts`, `TicketSearchFilterService`, `TicketSearchBox.jsx`

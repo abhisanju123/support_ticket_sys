@@ -79,9 +79,23 @@ Deliver a monorepo Support Ticket System in two packages (`backend`, `frontend`)
 
 | Task | Status |
 | ---- | ------ |
-| Backend unit tests (auth, password) | Done |
+| Backend unit tests (auth, password, RBAC, notifications, search) | Done |
+| RBAC integration test | Done |
 | ESLint / Prettier / Husky | Done |
 | Submission documentation pack | Done |
+
+### Phase 8 — Notifications, RBAC & search polish
+
+| Task | Status |
+| ---- | ------ |
+| `notifications` collection + API endpoints | Done |
+| Role-based notification routing (comments, updates, status) | Done |
+| Frontend bell menu + unread badge + mark read | Done |
+| Per-user RTK cache + logout API reset | Done |
+| Cross-field ticket keyword search | Done |
+| Assignee dropdown: admin/agent only | Done |
+| Dashboard status chart includes cancelled | Done |
+| Auth login 50/50 layout (remove mock preview cards) | Done |
 
 ---
 
@@ -124,7 +138,7 @@ Deliver a monorepo Support Ticket System in two packages (`backend`, `frontend`)
 | ---- | ------ | ---------- |
 | MongoDB Atlas connectivity (IP whitelist) | Blocks backend startup | Medium |
 | AI-generated code drift from patterns | Inconsistent architecture | Medium |
-| RTK Query cache staleness | Wrong UI after mutations | Low (mitigated with tags) |
+| RTK Query cache staleness | Wrong UI after mutations or user switch | Low (tags + per-user scope + logout reset) |
 | RHF + MUI Select integration | Empty dropdown on edit | Medium (fixed with controlled value) |
 | Over-scoping assessment | Miss deadline | Low (phased prompts) |
 | Secrets in `.env` committed | Security incident | Low (gitignored) |
@@ -137,7 +151,7 @@ Deliver a monorepo Support Ticket System in two packages (`backend`, `frontend`)
 | ---- | ---------- |
 | Atlas connectivity | Document IP whitelist; local MongoDB fallback; Windows DNS workaround in `connection.ts` |
 | Pattern drift | Cursor rules, existing file conventions, layered folder structure |
-| Cache issues | RTK Query `tagTypes` + `invalidatesTags` on mutations |
+| Cache issues | RTK Query `tagTypes` + `invalidatesTags`; per-user notification cache; `resetApiState` on logout |
 | Form bugs | `useValidatedForm`, controlled selects, stable `ticketId` key on edit form |
-| Scope creep | Acceptance criteria checklist; defer attachments, notifications, RBAC |
+| Scope creep | Acceptance criteria checklist; defer email delivery, attachments, full endpoint RBAC |
 | Secrets | `.gitignore` for `.env`; `.env.example` only |
