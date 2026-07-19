@@ -66,7 +66,7 @@ describe('frontend permissions', () => {
     expect(filterAssignableUsers(users).map((user) => user._id)).toEqual(['2', '3']);
   });
 
-  it('allows comment authors to edit and scoped delete access', () => {
+  it('allows only comment authors to edit and delete comments', () => {
     const ownComment = { createdBy: { _id: 'emp-1' } };
     const foreignComment = { createdBy: { _id: 'other-1' } };
 
@@ -74,6 +74,7 @@ describe('frontend permissions', () => {
     expect(canEditComment(employee, foreignComment)).toBe(false);
     expect(canDeleteComment(employee, ownComment)).toBe(true);
     expect(canDeleteComment(employee, foreignComment)).toBe(false);
-    expect(canDeleteComment(admin, foreignComment)).toBe(true);
+    expect(canDeleteComment(admin, foreignComment)).toBe(false);
+    expect(canDeleteComment(admin, { createdBy: { _id: 'admin-1' } })).toBe(true);
   });
 });

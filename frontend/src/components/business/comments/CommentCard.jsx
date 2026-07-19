@@ -95,7 +95,7 @@ export function CommentCard({
         />
 
         {showActions ? (
-          <Box sx={{ display: 'flex', flexShrink: 0 }}>
+          <Box className="comment-card__actions" sx={{ display: 'flex', flexShrink: 0 }}>
             {canEdit ? (
               <Tooltip title="Edit comment">
                 <span>
@@ -103,7 +103,7 @@ export function CommentCard({
                     size="small"
                     aria-label="Edit comment"
                     onClick={handleStartEdit}
-                    className="interactive-press"
+                    className="comment-card__action-btn interactive-press"
                   >
                     <EditOutlinedIcon fontSize="small" />
                   </IconButton>
@@ -117,7 +117,7 @@ export function CommentCard({
                     size="small"
                     aria-label="Delete comment"
                     onClick={onDelete}
-                    className="interactive-press"
+                    className="comment-card__action-btn interactive-press"
                   >
                     <DeleteOutlinedIcon fontSize="small" />
                   </IconButton>

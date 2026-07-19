@@ -95,10 +95,7 @@ export function assertCanDeleteComment(
   user: AuthenticatedUser,
   comment: CommentAuthorFields,
 ): void {
-  if (
-    resolveCommentAuthorId(comment.createdBy) !== user.id &&
-    user.role !== UserRole.ADMIN
-  ) {
+  if (resolveCommentAuthorId(comment.createdBy) !== user.id) {
     throw new ForbiddenException('You can only delete your own comments');
   }
 }

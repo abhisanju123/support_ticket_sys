@@ -98,12 +98,12 @@ describe('ticket-access', () => {
     );
   });
 
-  it('allows comment authors and admins to delete comments', () => {
+  it('allows only comment authors to delete comments', () => {
     const ownComment = { createdBy: new Types.ObjectId(employeeId) };
     const foreignComment = { createdBy: new Types.ObjectId(otherUserId) };
 
     expect(() => assertCanDeleteComment(employeeUser, ownComment)).not.toThrow();
     expect(() => assertCanDeleteComment(employeeUser, foreignComment)).toThrow(ForbiddenException);
-    expect(() => assertCanDeleteComment(adminUser, foreignComment)).not.toThrow();
+    expect(() => assertCanDeleteComment(adminUser, foreignComment)).toThrow(ForbiddenException);
   });
 });

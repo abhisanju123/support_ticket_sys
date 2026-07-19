@@ -47,6 +47,7 @@
   .header-action-btn,
   .header-profile-btn,
   .ticket-table-actions .MuiIconButton-root,
+  .comment-card__action-btn,
   .auth-layout__mobile-hero,
   .auth-form-card__trust,
   .app-btn--cancel.MuiButton-root,
@@ -63,6 +64,7 @@
   .header-action-btn::before,
   .header-profile-btn::before,
   .ticket-table-actions .MuiIconButton-root::before,
+  .comment-card__action-btn::before,
   .auth-layout__mobile-hero::before,
   .auth-form-card__trust::before,
   .app-btn--cancel.MuiButton-root::before,
@@ -96,6 +98,7 @@
   .header-action-btn:hover::before,
   .header-profile-btn:hover::before,
   .ticket-table-actions .MuiIconButton-root:hover::before,
+  .comment-card__action-btn:hover::before,
   .app-btn--cancel.MuiButton-root:not(:disabled):hover::before,
   .MuiButton-outlined:not(:disabled):hover::before {
     background: var(--app-gradient-border-hover);
@@ -165,6 +168,56 @@
 
   .ticket-table-actions .MuiIconButton-root:active {
     animation: app-btn-press 0.14s ease forwards;
+  }
+
+  .comment-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--app-space-stack, 1rem);
+  }
+
+  .comment-list__pagination {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+    padding-top: 0.5rem;
+    margin-top: 0.25rem;
+  }
+
+  .comment-card__actions {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  .comment-card__action-btn.MuiIconButton-root {
+    background: var(--app-gradient-brand-soft);
+    color: var(--app-color-gradient-soft-text);
+    transition: none;
+  }
+
+  .comment-card__action-btn.MuiIconButton-root:hover {
+    animation: app-btn-lift 0.34s cubic-bezier(0.34, 1.35, 0.64, 1) forwards;
+    background: var(--app-gradient-brand);
+    color: #ffffff;
+    box-shadow: var(--app-btn-submit-shadow);
+  }
+
+  .comment-card__action-btn.MuiIconButton-root:active {
+    animation: app-btn-press 0.14s ease forwards;
+  }
+
+  .app-dialog-actions.MuiDialogActions-root {
+    gap: 0.75rem;
+    padding: 1rem 1.5rem 1.25rem;
+  }
+
+  .app-dialog-actions .MuiButton-root {
+    min-width: 6.5rem;
+  }
+
+  .notifications-menu .app-btn--gradient-soft.MuiButton-root {
+    flex-shrink: 0;
   }
 
   .metadata-item__label {

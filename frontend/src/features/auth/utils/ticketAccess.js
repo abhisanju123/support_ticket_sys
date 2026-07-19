@@ -77,15 +77,7 @@ export function canEditComment(user, comment) {
 }
 
 export function canDeleteComment(user, comment) {
-  if (!user || !comment) {
-    return false;
-  }
-
-  if (user.role === UserRole.ADMIN) {
-    return true;
-  }
-
-  return resolveUserId(comment.createdBy) === user._id;
+  return canEditComment(user, comment);
 }
 
 export function mustCreateTicketAsSelf(role) {

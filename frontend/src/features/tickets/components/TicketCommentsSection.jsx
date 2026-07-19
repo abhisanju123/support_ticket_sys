@@ -33,6 +33,7 @@ function isCommentEdited(comment) {
 
 export function TicketCommentsSection({
   comments,
+  ticketId,
   onAddComment,
   onEditComment,
   onDeleteComment,
@@ -89,7 +90,12 @@ export function TicketCommentsSection({
   });
 
   const commentList = (
-    <CommentList comments={comments} getCommentProps={getCommentProps} />
+    <CommentList
+      key={ticketId}
+      comments={comments}
+      getCommentProps={getCommentProps}
+      listKey={ticketId}
+    />
   );
 
   if (!canComment) {

@@ -231,6 +231,7 @@ export function TicketDetailsPage() {
         <LoadingSpinner message="Loading comments..." />
       ) : (
         <TicketCommentsSection
+          ticketId={ticketId}
           comments={comments}
           onAddComment={handleAddComment}
           onEditComment={handleEditComment}

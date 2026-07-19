@@ -112,7 +112,7 @@ export function NotificationsMenu() {
               Notifications
             </Typography>
             {unreadCount > 0 ? (
-              <Button size="small" onClick={handleMarkAllRead}>
+              <Button size="small" onClick={handleMarkAllRead} className="app-btn--gradient-soft interactive-press">
                 Mark all read
               </Button>
             ) : null}

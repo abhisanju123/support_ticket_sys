@@ -18,11 +18,16 @@ export function ConfirmDialog({
     <Dialog open={open} onClose={onCancel} maxWidth="xs" fullWidth>
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>{message}</DialogContent>
-      <DialogActions>
-        <Button onClick={onCancel} disabled={isLoading}>
+      <DialogActions className="app-dialog-actions">
+        <Button onClick={onCancel} disabled={isLoading} className="app-btn--cancel">
           {cancelLabel}
         </Button>
-        <Button onClick={onConfirm} variant="contained" disabled={isLoading}>
+        <Button
+          onClick={onConfirm}
+          variant="contained"
+          disabled={isLoading}
+          className="app-btn--submit interactive-press"
+        >
           {confirmLabel}
         </Button>
       </DialogActions>
