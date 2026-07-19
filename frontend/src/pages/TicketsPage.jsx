@@ -138,6 +138,7 @@ export function TicketsPage() {
               to={ROUTE_PATHS.CREATE_TICKET}
               variant="contained"
               startIcon={<AddIcon />}
+              className="app-btn--submit interactive-press"
             >
               Create Ticket
             </Button>
@@ -190,7 +191,12 @@ export function TicketsPage() {
             illustration={<EmptyTicketsIllustration />}
             action={
               canCreateTicket() ? (
-                <Button component={RouterLink} to={ROUTE_PATHS.CREATE_TICKET} variant="contained">
+                <Button
+                  component={RouterLink}
+                  to={ROUTE_PATHS.CREATE_TICKET}
+                  variant="contained"
+                  className="app-btn--submit interactive-press"
+                >
                   Create Ticket
                 </Button>
               ) : null

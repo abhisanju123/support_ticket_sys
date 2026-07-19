@@ -190,48 +190,25 @@ export function AppHeader({ onMenuClick, guest = false }) {
                 sx={{
                   ml: 0.25,
                   pl: 0.5,
-                  pr: { xs: 0.5, sm: 1 },
+                  pr: { xs: 0.75, sm: 1 },
                   py: 0.5,
                   minWidth: 0,
                   borderRadius: 2,
                   textTransform: 'none',
                   color: 'text.primary',
-                  border: 1,
-                  borderColor: 'divider',
-                  bgcolor: 'background.paper',
-                  '&:hover': {
-                    bgcolor: 'action.hover',
-                    borderColor: 'divider',
-                  },
                 }}
               >
-                <Avatar
-                  className="header-profile-avatar"
-                  alt={displayName}
-                  sx={{
-                    width: 32,
-                    height: 32,
-                    flexShrink: 0,
-                    bgcolor: 'primary.main',
-                    color: 'primary.contrastText',
-                    fontSize: '0.875rem',
-                    fontWeight: 700,
-                    lineHeight: 1,
-                  }}
-                >
+                <Avatar className="header-profile-avatar" alt={displayName} sx={{ width: 32, height: 32, fontSize: '0.875rem' }}>
                   {userInitial}
                 </Avatar>
 
-                <Box sx={{ display: { xs: 'none', sm: 'block' }, textAlign: 'left', ml: 1, mr: 0.25 }}>
-                  <Typography variant="body2" fontWeight={600} lineHeight={1.2} noWrap>
+                <Box sx={{ textAlign: 'left', ml: 1, mr: 0.25, minWidth: 0 }}>
+                  <Typography variant="body2" fontWeight={600} lineHeight={1.2} noWrap sx={{ maxWidth: { xs: 96, sm: 160 } }}>
                     {displayName}
                   </Typography>
                 </Box>
 
-                <KeyboardArrowDownIcon
-                  fontSize="small"
-                  sx={{ display: { xs: 'none', sm: 'block' }, color: 'text.secondary' }}
-                />
+                <KeyboardArrowDownIcon fontSize="small" sx={{ color: 'text.secondary', flexShrink: 0 }} />
               </Button>
 
               <Menu
@@ -254,10 +231,18 @@ export function AppHeader({ onMenuClick, guest = false }) {
                   },
                 }}
               >
-                <Box sx={{ px: 2, py: 1.5 }}>
-                  <Typography variant="subtitle2" fontWeight={700}>
-                    {displayName}
-                  </Typography>
+                <Box className="header-profile-menu__user" sx={{ px: 2, py: 1.5 }}>
+                  <Avatar className="header-profile-avatar" alt={displayName} sx={{ width: 36, height: 36, fontSize: '0.9375rem' }}>
+                    {userInitial}
+                  </Avatar>
+                  <Box sx={{ minWidth: 0 }}>
+                    <Typography variant="subtitle2" fontWeight={700} noWrap>
+                      {displayName}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary" noWrap>
+                      {user?.email}
+                    </Typography>
+                  </Box>
                 </Box>
 
                 <Divider />

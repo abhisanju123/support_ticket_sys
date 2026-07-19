@@ -10,7 +10,7 @@ export function DashboardSummary({ title, description, items = [], actions = nul
     <Box className="stack-spacing">
       <PageHeader title={title} description={description} actions={actions} />
       {items.length > 0 ? (
-        <Panel component="section">
+        <Panel component="section" className="dashboard-stats-panel">
           <DashboardCardGrid items={items} />
         </Panel>
       ) : null}

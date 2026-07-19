@@ -14,7 +14,7 @@ export function DashboardQuickActions() {
         to={ROUTE_PATHS.CREATE_TICKET}
         variant="contained"
         startIcon={<AddIcon />}
-        className="interactive-press"
+        className="app-btn--submit interactive-press"
       >
         Create Ticket
       </Button>
@@ -22,9 +22,9 @@ export function DashboardQuickActions() {
       <Button
         component={RouterLink}
         to={buildTicketsListPath({ status: 'open' })}
-        variant="outlined"
+        variant="contained"
         startIcon={<FolderOpenOutlinedIcon />}
-        className="interactive-press"
+        className="app-btn--gradient-soft interactive-press"
       >
         View Open Tickets
       </Button>

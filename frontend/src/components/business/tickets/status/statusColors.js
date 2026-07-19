@@ -2,44 +2,56 @@
 export const STATUS_STYLES = {
   open: {
     bgcolor: '#E3F2FD',
+    background: 'linear-gradient(135deg, #f3f9ff 0%, #dbeafe 42%, #bfdbfe 100%)',
     color: '#0D47A1',
     borderColor: '#64B5F6',
     iconBg: '#1565C0',
+    iconBackground: 'linear-gradient(135deg, #64b5f6 0%, #1565c0 100%)',
     iconColor: '#FFFFFF',
   },
   in_progress: {
     bgcolor: '#FFF8E1',
+    background: 'linear-gradient(135deg, #fffbeb 0%, #fef3c7 45%, #fde68a 100%)',
     color: '#E65100',
     borderColor: '#FFB300',
     iconBg: '#ED6C02',
+    iconBackground: 'linear-gradient(135deg, #ffb74d 0%, #ed6c02 100%)',
     iconColor: '#FFFFFF',
   },
   on_hold: {
     bgcolor: '#F3E5F5',
+    background: 'linear-gradient(135deg, #faf5ff 0%, #f3e8ff 45%, #e9d5ff 100%)',
     color: '#6A1B9A',
     borderColor: '#BA68C8',
     iconBg: '#7B1FA2',
+    iconBackground: 'linear-gradient(135deg, #ba68c8 0%, #7b1fa2 100%)',
     iconColor: '#FFFFFF',
   },
   resolved: {
     bgcolor: '#E8F5E9',
+    background: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 45%, #bbf7d0 100%)',
     color: '#1B5E20',
     borderColor: '#66BB6A',
     iconBg: '#2E7D32',
+    iconBackground: 'linear-gradient(135deg, #66bb6a 0%, #2e7d32 100%)',
     iconColor: '#FFFFFF',
   },
   closed: {
     bgcolor: '#ECEFF1',
+    background: 'linear-gradient(135deg, #f8fafc 0%, #eceff1 45%, #cfd8dc 100%)',
     color: '#37474F',
     borderColor: '#78909C',
     iconBg: '#546E7A',
+    iconBackground: 'linear-gradient(135deg, #90a4ae 0%, #546e7a 100%)',
     iconColor: '#FFFFFF',
   },
   cancelled: {
     bgcolor: '#FFEBEE',
+    background: 'linear-gradient(135deg, #fff1f2 0%, #ffe4e6 45%, #fecdd3 100%)',
     color: '#B71C1C',
     borderColor: '#EF5350',
     iconBg: '#D32F2F',
+    iconBackground: 'linear-gradient(135deg, #ef5350 0%, #d32f2f 100%)',
     iconColor: '#FFFFFF',
   },
 };
@@ -47,9 +59,11 @@ export const STATUS_STYLES = {
 /** Distinct styling for the dashboard total summary card. */
 export const TOTAL_CARD_STYLE = {
   bgcolor: '#E8EAF6',
+  background: 'linear-gradient(135deg, #f5f3ff 0%, #ede9fe 40%, #ddd6fe 100%)',
   color: '#283593',
   borderColor: '#7986CB',
   iconBg: '#3949AB',
+  iconBackground: 'linear-gradient(135deg, #42a5f5 0%, #6a1b9a 100%)',
   iconColor: '#FFFFFF',
 };
 

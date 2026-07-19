@@ -23,6 +23,7 @@ export function AppLogo({
   tone = 'dark',
 }) {
   const isColumn = layout === 'column';
+  const isLightTone = tone === 'light';
 
   const brand = (
     <Box
@@ -35,27 +36,34 @@ export function AppLogo({
       }}
     >
       <Box
-        component="img"
-        src={appLogo}
-        alt={APP_TITLE}
-        sx={{
-          width: size,
-          height: size,
-          display: 'block',
-          flexShrink: 0,
-          ...(tone === 'light' && {
-            filter: 'brightness(0) invert(1)',
-          }),
-        }}
-      />
+        className={`app-logo__mark${isLightTone ? ' app-logo__mark--light' : ''}`}
+        sx={{ width: size + 6, height: size + 6 }}
+      >
+        <Box
+          component="img"
+          src={appLogo}
+          alt=""
+          aria-hidden="true"
+          sx={{
+            width: size,
+            height: size,
+            display: 'block',
+            flexShrink: 0,
+            ...(isLightTone && {
+              filter: 'brightness(0) invert(1)',
+            }),
+          }}
+        />
+      </Box>
 
       {showTitle ? (
         <Typography
           variant={isColumn ? 'h6' : 'subtitle1'}
           component="span"
           fontWeight={700}
+          className={isLightTone ? undefined : 'app-logo__title--gradient'}
           sx={{
-            color: tone === 'light' ? 'common.white' : 'text.primary',
+            color: isLightTone ? 'common.white' : undefined,
             lineHeight: 1.2,
             maxWidth: isColumn ? 'none' : { xs: 150, sm: 220 },
           }}

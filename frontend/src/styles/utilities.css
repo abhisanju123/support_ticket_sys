@@ -45,6 +45,7 @@
   .app-form-section,
   .app-form--auth,
   .header-action-btn,
+  .header-profile-btn,
   .ticket-table-actions .MuiIconButton-root,
   .auth-layout__mobile-hero,
   .auth-form-card__trust,
@@ -60,6 +61,7 @@
   .app-form-section::before,
   .app-form--auth::before,
   .header-action-btn::before,
+  .header-profile-btn::before,
   .ticket-table-actions .MuiIconButton-root::before,
   .auth-layout__mobile-hero::before,
   .auth-form-card__trust::before,
@@ -92,6 +94,7 @@
   .app-form-section:hover::before,
   .surface-card:hover::before,
   .header-action-btn:hover::before,
+  .header-profile-btn:hover::before,
   .ticket-table-actions .MuiIconButton-root:hover::before,
   .app-btn--cancel.MuiButton-root:not(:disabled):hover::before,
   .MuiButton-outlined:not(:disabled):hover::before {
@@ -179,13 +182,16 @@
   }
 
   .dashboard-stat-card {
+    overflow: hidden;
     transition:
       transform 0.22s cubic-bezier(0.4, 0, 0.2, 1),
       box-shadow 0.22s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .dashboard-stat-card:hover {
-    box-shadow: var(--app-shadow-elevated);
+    box-shadow:
+      var(--app-shadow-elevated),
+      inset 0 1px 0 rgba(255, 255, 255, 0.55);
     transform: translateY(-2px);
   }
 
@@ -195,6 +201,10 @@
 
   .dashboard-stat-card:hover .dashboard-stat-card__icon {
     transform: scale(1.08);
+  }
+
+  .dashboard-stats-panel.app-panel {
+    background: var(--app-color-panel-bg);
   }
 
   .dashboard-chart-body {
@@ -288,7 +298,7 @@
   }
 
   .app-btn--submit.MuiButton-root,
-  .MuiButton-containedPrimary:not(.Mui-disabled) {
+  .MuiButton-containedPrimary:not(.Mui-disabled):not(.app-btn--gradient-soft) {
     background: var(--app-btn-submit-bg) !important;
     color: #ffffff !important;
     border: none !important;
@@ -297,7 +307,7 @@
   }
 
   .app-btn--submit.MuiButton-root:not(:disabled):hover,
-  .MuiButton-containedPrimary:not(:disabled):hover {
+  .MuiButton-containedPrimary:not(:disabled):not(.app-btn--gradient-soft):hover {
     background: var(--app-btn-submit-bg-hover) !important;
     animation:
       app-btn-lift 0.34s cubic-bezier(0.34, 1.35, 0.64, 1) forwards,
@@ -334,6 +344,75 @@
     opacity: 0.55;
     pointer-events: none;
     transform: none !important;
+  }
+
+  .app-btn--gradient-soft.MuiButton-root {
+    background: var(--app-gradient-brand-soft) !important;
+    color: var(--app-color-gradient-soft-text) !important;
+    border: none !important;
+    box-shadow: var(--app-shadow-elevated) !important;
+    transition: none !important;
+  }
+
+  .app-btn--gradient-soft.MuiButton-root:not(:disabled):hover {
+    background: var(--app-gradient-brand) !important;
+    color: #ffffff !important;
+    box-shadow: var(--app-btn-submit-shadow-hover) !important;
+    animation:
+      app-btn-lift 0.34s cubic-bezier(0.34, 1.35, 0.64, 1) forwards,
+      app-btn-submit-glow 0.34s ease forwards;
+  }
+
+  .app-logo__mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    padding: 3px;
+    border-radius: 0.75rem;
+    background: var(--app-gradient-brand);
+    box-shadow: 0 4px 14px rgba(21, 101, 192, 0.28);
+  }
+
+  .app-logo__mark--light {
+    background: rgba(255, 255, 255, 0.16);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  }
+
+  .app-logo__mark img {
+    display: block;
+    border-radius: 0.5rem;
+  }
+
+  .app-logo__title--gradient {
+    background: var(--app-gradient-brand);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  .header-profile-btn {
+    background: var(--app-gradient-brand-soft) !important;
+    border: none !important;
+    text-transform: none !important;
+    box-shadow: var(--app-shadow-elevated);
+  }
+
+  .header-profile-btn:hover {
+    background: var(--app-color-block-bg-muted) !important;
+  }
+
+  .header-profile-avatar {
+    background: var(--app-gradient-brand) !important;
+    color: #ffffff !important;
+    font-weight: 700;
+  }
+
+  .header-profile-menu__user {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
   }
 
   .app-form {
@@ -464,14 +543,6 @@
 
   .header-action-btn:active {
     animation: app-btn-press 0.14s ease forwards;
-  }
-
-  .header-profile-btn {
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-  }
-
-  .header-profile-btn .header-profile-avatar {
-    color: #ffffff;
   }
 
   .page-breadcrumbs {
