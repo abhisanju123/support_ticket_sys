@@ -5,6 +5,7 @@ import { useEffect, useMemo } from 'react';
 import { CommentForm } from '../../../components/business/comments/CommentForm.jsx';
 import { CommentList } from '../../../components/business/comments/CommentList.jsx';
 import { useAuth } from '../../auth/hooks/useAuth.js';
+import { usePermissions } from '../../auth/hooks/usePermissions.js';
 import { useCachedUsersQuery } from '../../users/api/usersApi.js';
 import {
   formatRelativeTime,
@@ -22,8 +23,26 @@ const defaultValues = {
   createdBy: '',
 };
 
-export function TicketCommentsSection({ comments, onAddComment, isSubmitting = false, canComment = true }) {
+function isCommentEdited(comment) {
+  if (!comment?.updatedAt || !comment?.createdAt) {
+    return false;
+  }
+
+  return new Date(comment.updatedAt).getTime() > new Date(comment.createdAt).getTime();
+}
+
+export function TicketCommentsSection({
+  comments,
+  onAddComment,
+  onEditComment,
+  onDeleteComment,
+  isSubmitting = false,
+  isUpdatingComment = false,
+  updatingCommentId = null,
+  canComment = true,
+}) {
   const { user } = useAuth();
+  const { canEditComment, canDeleteComment } = usePermissions();
   const { data: users = [], isLoading: usersLoading } = useCachedUsersQuery();
   const validUserIds = useMemo(() => users.map((user) => user._id), [users]);
   const usersById = useMemo(() => new Map(users.map((user) => [user._id, user])), [users]);
@@ -56,21 +75,30 @@ export function TicketCommentsSection({ comments, onAddComment, isSubmitting = f
     setValue('createdBy', user._id, { shouldValidate: true });
   }, [user, values.createdBy, setValue]);
 
+  const getCommentProps = (comment) => ({
+    message: comment.message,
+    author: resolveCommentAuthor(comment.createdBy, usersById),
+    createdAtLabel: formatRelativeTime(comment.createdAt),
+    fullDateLabel: formatTicketDate(comment.createdAt),
+    isEdited: isCommentEdited(comment),
+    canEdit: canEditComment(comment),
+    canDelete: canDeleteComment(comment),
+    isSaving: isUpdatingComment && updatingCommentId === comment._id,
+    onSave: (message) => onEditComment?.(comment._id, message),
+    onDelete: () => onDeleteComment?.(comment),
+  });
+
+  const commentList = (
+    <CommentList comments={comments} getCommentProps={getCommentProps} />
+  );
+
   if (!canComment) {
     return (
       <Box component="section" className="surface-card shadow-elevated card-spacing stack-spacing">
         <Typography variant="h6" component="h3">
           Comments
         </Typography>
-        <CommentList
-          comments={comments}
-          getCommentProps={(comment) => ({
-            message: comment.message,
-            author: resolveCommentAuthor(comment.createdBy, usersById),
-            createdAtLabel: formatRelativeTime(comment.createdAt),
-            fullDateLabel: formatTicketDate(comment.createdAt),
-          })}
-        />
+        {commentList}
         <Typography variant="body2" color="text.secondary">
           You do not have permission to add comments on this ticket.
         </Typography>
@@ -84,15 +112,7 @@ export function TicketCommentsSection({ comments, onAddComment, isSubmitting = f
         Comments
       </Typography>
 
-      <CommentList
-        comments={comments}
-        getCommentProps={(comment) => ({
-          message: comment.message,
-          author: resolveCommentAuthor(comment.createdBy, usersById),
-          createdAtLabel: formatRelativeTime(comment.createdAt),
-          fullDateLabel: formatTicketDate(comment.createdAt),
-        })}
-      />
+      {commentList}
 
       <CommentForm
         register={register}

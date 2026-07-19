@@ -1,6 +1,8 @@
 import { Types } from 'mongoose';
 
 import {
+  assertCanDeleteComment,
+  assertCanEditComment,
   assertCanEditTicket,
   assertEmployeeCreatesOwnTicket,
   assertTicketVisible,
@@ -85,5 +87,23 @@ describe('ticket-access', () => {
   it('scopes employee ticket lists to accessible tickets', () => {
     expect(getTicketListScope(employeeUser)).toEqual({ accessibleToUserId: employeeId });
     expect(getTicketListScope(adminUser)).toEqual({});
+  });
+
+  it('allows comment authors to edit their own comments', () => {
+    const ownComment = { createdBy: new Types.ObjectId(employeeId) };
+
+    expect(() => assertCanEditComment(employeeUser, ownComment)).not.toThrow();
+    expect(() => assertCanEditComment(employeeUser, { createdBy: otherUserId })).toThrow(
+      ForbiddenException,
+    );
+  });
+
+  it('allows comment authors and admins to delete comments', () => {
+    const ownComment = { createdBy: new Types.ObjectId(employeeId) };
+    const foreignComment = { createdBy: new Types.ObjectId(otherUserId) };
+
+    expect(() => assertCanDeleteComment(employeeUser, ownComment)).not.toThrow();
+    expect(() => assertCanDeleteComment(employeeUser, foreignComment)).toThrow(ForbiddenException);
+    expect(() => assertCanDeleteComment(adminUser, foreignComment)).not.toThrow();
   });
 });

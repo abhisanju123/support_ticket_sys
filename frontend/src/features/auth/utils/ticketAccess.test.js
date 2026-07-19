@@ -3,7 +3,9 @@ import { describe, expect, it } from 'vitest';
 import { Permission, UserRole, hasPermission } from '../constants/permissions.js';
 import {
   canChangeTicketStatus,
+  canDeleteComment,
   canDeleteTicket,
+  canEditComment,
   canEditTicket,
   canViewTicket,
   filterAssignableUsers,
@@ -62,5 +64,16 @@ describe('frontend permissions', () => {
     ];
 
     expect(filterAssignableUsers(users).map((user) => user._id)).toEqual(['2', '3']);
+  });
+
+  it('allows comment authors to edit and scoped delete access', () => {
+    const ownComment = { createdBy: { _id: 'emp-1' } };
+    const foreignComment = { createdBy: { _id: 'other-1' } };
+
+    expect(canEditComment(employee, ownComment)).toBe(true);
+    expect(canEditComment(employee, foreignComment)).toBe(false);
+    expect(canDeleteComment(employee, ownComment)).toBe(true);
+    expect(canDeleteComment(employee, foreignComment)).toBe(false);
+    expect(canDeleteComment(admin, foreignComment)).toBe(true);
   });
 });

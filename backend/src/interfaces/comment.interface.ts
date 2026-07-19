@@ -7,8 +7,9 @@ export interface IComment {
   createdBy: ObjectId;
 }
 
-/** Full persisted comment document including id and creation timestamp. */
+/** Full persisted comment document including id and timestamps. */
 export interface ICommentRecord extends IComment {
   _id: ObjectId;
   createdAt: Date;
+  updatedAt: Date;
 }

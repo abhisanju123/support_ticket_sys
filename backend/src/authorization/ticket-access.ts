@@ -68,6 +68,41 @@ export function assertCommentAuthorIsSelf(user: AuthenticatedUser, createdBy: st
   }
 }
 
+const resolveCommentAuthorId = (
+  createdBy: string | ObjectId | { _id?: string | ObjectId },
+): string => {
+  if (createdBy && typeof createdBy === 'object' && '_id' in createdBy && createdBy._id != null) {
+    return String(createdBy._id);
+  }
+
+  return String(createdBy);
+};
+
+export interface CommentAuthorFields {
+  createdBy: string | ObjectId | { _id?: string | ObjectId };
+}
+
+export function assertCanEditComment(
+  user: AuthenticatedUser,
+  comment: CommentAuthorFields,
+): void {
+  if (resolveCommentAuthorId(comment.createdBy) !== user.id) {
+    throw new ForbiddenException('You can only edit your own comments');
+  }
+}
+
+export function assertCanDeleteComment(
+  user: AuthenticatedUser,
+  comment: CommentAuthorFields,
+): void {
+  if (
+    resolveCommentAuthorId(comment.createdBy) !== user.id &&
+    user.role !== UserRole.ADMIN
+  ) {
+    throw new ForbiddenException('You can only delete your own comments');
+  }
+}
+
 export function getTicketListScope(user: AuthenticatedUser): { accessibleToUserId?: string } {
   if (canViewAllTickets(user.role)) {
     return {};

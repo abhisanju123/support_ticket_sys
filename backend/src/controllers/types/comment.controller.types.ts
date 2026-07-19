@@ -5,4 +5,8 @@ export interface CreateCommentBody {
   createdBy: string;
 }
 
+export interface UpdateCommentBody {
+  message: string;
+}
+
 export type CommentListQueryParams = CommentListOptions;

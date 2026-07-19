@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { ticketNumberSchema } from '../common.schema.js';
+import { objectIdSchema, ticketNumberSchema } from '../common.schema.js';
 
 export const DEFAULT_PAGE = 1;
 export const DEFAULT_LIMIT = 20;
@@ -50,4 +50,9 @@ export const ticketIdParamSchema = z.object({
 
 export const ticketCommentParamSchema = z.object({
   ticketId: ticketNumberSchema,
+});
+
+export const ticketCommentIdParamSchema = z.object({
+  ticketId: ticketNumberSchema,
+  commentId: objectIdSchema,
 });

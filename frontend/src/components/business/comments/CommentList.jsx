@@ -17,7 +17,7 @@ export function CommentList({ comments = [], getCommentProps }) {
           createdAtLabel: comment.createdAt,
         };
 
-        return <CommentCard key={comment._id} {...props} />;
+        return <CommentCard key={comment._id ?? comment.id} {...props} />;
       })}
     </Box>
   );

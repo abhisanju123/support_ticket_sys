@@ -159,6 +159,13 @@
   --app-color-input-bg-hover: #ffffff;
   --app-color-input-label-bg: #ffffff;
   --app-color-gradient-soft-text: #0d47a1;
+
+  /* Toast gradients */
+  --app-toast-gradient-success: linear-gradient(135deg, #81c784 0%, #43a047 48%, #2e7d32 100%);
+  --app-toast-gradient-error: linear-gradient(135deg, #ef5350 0%, #e53935 48%, #c62828 100%);
+  --app-toast-gradient-warning: linear-gradient(135deg, #ffb74d 0%, #fb8c00 48%, #ef6c00 100%);
+  --app-toast-gradient-info: linear-gradient(135deg, #64b5f6 0%, #1e88e5 48%, #6a1b9a 100%);
+  --app-toast-gradient-default: var(--app-gradient-brand);
   --app-btn-submit-bg: var(--app-gradient-brand);
   --app-btn-submit-bg-hover: var(--app-gradient-brand-hover);
   --app-btn-submit-shadow: 0 4px 14px rgba(21, 101, 192, 0.28);
@@ -262,6 +269,12 @@
   --app-color-input-bg-hover: #242b38;
   --app-color-input-label-bg: #1e2430;
   --app-color-gradient-soft-text: #90caf9;
+
+  --app-toast-gradient-success: linear-gradient(135deg, #a5d6a7 0%, #66bb6a 48%, #388e3c 100%);
+  --app-toast-gradient-error: linear-gradient(135deg, #ef9a9a 0%, #ef5350 48%, #d32f2f 100%);
+  --app-toast-gradient-warning: linear-gradient(135deg, #ffcc80 0%, #ffa726 48%, #f57c00 100%);
+  --app-toast-gradient-info: linear-gradient(135deg, #90caf9 0%, #42a5f5 48%, #9c4dcc 100%);
+  --app-toast-gradient-default: var(--app-gradient-brand);
   --app-btn-submit-bg: var(--app-gradient-brand);
   --app-btn-submit-bg-hover: var(--app-gradient-brand-hover);
   --app-btn-submit-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);

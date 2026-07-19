@@ -68,6 +68,26 @@ export function canCommentOnTicket(user, ticket) {
   return canViewTicket(user, ticket) && hasPermission(user?.role, Permission.COMMENT_CREATE);
 }
 
+export function canEditComment(user, comment) {
+  if (!user || !comment) {
+    return false;
+  }
+
+  return resolveUserId(comment.createdBy) === user._id;
+}
+
+export function canDeleteComment(user, comment) {
+  if (!user || !comment) {
+    return false;
+  }
+
+  if (user.role === UserRole.ADMIN) {
+    return true;
+  }
+
+  return resolveUserId(comment.createdBy) === user._id;
+}
+
 export function mustCreateTicketAsSelf(role) {
   return role === UserRole.EMPLOYEE;
 }

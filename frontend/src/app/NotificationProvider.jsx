@@ -43,14 +43,13 @@ export function NotificationProvider() {
         onClose={handleClose}
         severity={severity}
         variant="filled"
-        className="app-toast__alert"
+        className={`app-toast__alert app-toast__alert--${severity}`}
         sx={{
           width: '100%',
           minWidth: { xs: 280, sm: 320 },
           maxWidth: 420,
           alignItems: 'center',
           borderRadius: 2,
-          boxShadow: 'var(--app-shadow-elevated)',
           fontWeight: 500,
         }}
       >

@@ -11,7 +11,7 @@ import {
 import { EmptyTicketsIllustration, NotFoundState } from '../components/common';
 import { ROUTE_PATHS } from '../constants';
 import { usePermissions } from '../features/auth/hooks/usePermissions.js';
-import { useGetCommentsQuery, useCreateCommentMutation } from '../features/comments';
+import { useGetCommentsQuery, useCreateCommentMutation, useUpdateCommentMutation, useDeleteCommentMutation } from '../features/comments';
 import { useCachedUsersQuery } from '../features/users/api/usersApi.js';
 import { TicketActivityTimeline } from '../features/tickets/components/TicketActivityTimeline.jsx';
 import { TicketCommentsSection } from '../features/tickets/components/TicketCommentsSection.jsx';
@@ -38,12 +38,16 @@ export function TicketDetailsPage() {
   const dispatch = useAppDispatch();
   const [statusError, setStatusError] = useState(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [commentToDelete, setCommentToDelete] = useState(null);
+  const [updatingCommentId, setUpdatingCommentId] = useState(null);
   const { data: ticket, isLoading, isError, error, refetch } = useGetTicketByIdQuery(ticketId);
   const { data: comments = [], isLoading: isCommentsLoading } = useGetCommentsQuery({ ticketId });
   const { data: users = [] } = useCachedUsersQuery();
   const [updateStatus, { isLoading: isUpdatingStatus }] = useUpdateTicketStatusMutation();
   const [deleteTicket, { isLoading: isDeleting }] = useDeleteTicketMutation();
   const [createComment, { isLoading: isCreatingComment }] = useCreateCommentMutation();
+  const [updateComment, { isLoading: isUpdatingComment }] = useUpdateCommentMutation();
+  const [deleteComment, { isLoading: isDeletingComment }] = useDeleteCommentMutation();
   const { canEditTicket, canDeleteTicket, canChangeTicketStatus, canCommentOnTicket } =
     usePermissions();
 
@@ -146,6 +150,60 @@ export function TicketDetailsPage() {
     );
   };
 
+  const handleEditComment = async (commentId, message) => {
+    setUpdatingCommentId(commentId);
+
+    try {
+      await updateComment({ ticketId, commentId, message }).unwrap();
+
+      dispatch(
+        showNotification({
+          message: 'Comment updated successfully.',
+          severity: 'success',
+        }),
+      );
+    } catch (editError) {
+      dispatch(
+        showNotification({
+          message: getApiErrorNotificationMessage(editError),
+          severity: 'error',
+        }),
+      );
+      throw editError;
+    } finally {
+      setUpdatingCommentId(null);
+    }
+  };
+
+  const handleDeleteCommentRequest = (comment) => {
+    setCommentToDelete(comment);
+  };
+
+  const handleConfirmDeleteComment = async () => {
+    if (!commentToDelete?._id) {
+      return;
+    }
+
+    try {
+      await deleteComment({ ticketId, commentId: commentToDelete._id }).unwrap();
+
+      dispatch(
+        showNotification({
+          message: 'Comment deleted successfully.',
+          severity: 'success',
+        }),
+      );
+      setCommentToDelete(null);
+    } catch (deleteError) {
+      dispatch(
+        showNotification({
+          message: getApiErrorNotificationMessage(deleteError),
+          severity: 'error',
+        }),
+      );
+    }
+  };
+
   return (
     <PageContainer>
       <TicketDetailsInfo
@@ -175,7 +233,11 @@ export function TicketDetailsPage() {
         <TicketCommentsSection
           comments={comments}
           onAddComment={handleAddComment}
+          onEditComment={handleEditComment}
+          onDeleteComment={handleDeleteCommentRequest}
           isSubmitting={isCreatingComment}
+          isUpdatingComment={isUpdatingComment}
+          updatingCommentId={updatingCommentId}
           canComment={canCommentOnTicket(ticket)}
         />
       )}
@@ -186,6 +248,14 @@ export function TicketDetailsPage() {
         onConfirm={handleConfirmDelete}
         onCancel={() => setIsDeleteDialogOpen(false)}
         isLoading={isDeleting}
+      />
+
+      <DeleteConfirmationDialog
+        open={Boolean(commentToDelete)}
+        itemName="this comment"
+        onConfirm={handleConfirmDeleteComment}
+        onCancel={() => setCommentToDelete(null)}
+        isLoading={isDeletingComment}
       />
     </PageContainer>
   );

@@ -10,9 +10,11 @@ import {
   commentListQuerySchema,
   createCommentBodySchema,
   createTicketBodySchema,
+  ticketCommentIdParamSchema,
   ticketCommentParamSchema,
   ticketIdParamSchema,
   ticketListQuerySchema,
+  updateCommentBodySchema,
   updateTicketBodySchema,
 } from '../schemas/request/index.js';
 
@@ -82,6 +84,23 @@ export const createTicketRouter = (
     authorize(Permission.COMMENT_VIEW),
     validate({ params: ticketCommentParamSchema, query: commentListQuerySchema }),
     commentController.getCommentsByTicket,
+  );
+
+  router.patch(
+    '/:ticketId/comments/:commentId',
+    authorize(Permission.COMMENT_CREATE),
+    validate({
+      params: ticketCommentIdParamSchema,
+      body: updateCommentBodySchema,
+    }),
+    commentController.updateComment,
+  );
+
+  router.delete(
+    '/:ticketId/comments/:commentId',
+    authorize(Permission.COMMENT_CREATE),
+    validate({ params: ticketCommentIdParamSchema }),
+    commentController.deleteComment,
   );
 
   return router;

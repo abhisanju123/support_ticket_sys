@@ -670,6 +670,77 @@
     animation: toast-pop 0.32s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
+  .app-toast__alert {
+    position: relative;
+    isolation: isolate;
+    border: none !important;
+    color: #ffffff !important;
+    box-shadow:
+      var(--app-shadow-elevated),
+      0 10px 28px rgba(21, 101, 192, 0.22) !important;
+  }
+
+  .app-toast__alert::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    border-radius: inherit;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.55) 0%,
+      rgba(255, 255, 255, 0.18) 50%,
+      rgba(255, 255, 255, 0.35) 100%
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .app-toast__alert .MuiAlert-icon,
+  .app-toast__alert .MuiAlert-message,
+  .app-toast__alert .MuiAlert-action {
+    position: relative;
+    z-index: 1;
+  }
+
+  .app-toast__alert .MuiAlert-icon {
+    color: rgba(255, 255, 255, 0.96) !important;
+  }
+
+  .app-toast__alert .MuiAlert-action .MuiIconButton-root {
+    color: rgba(255, 255, 255, 0.92) !important;
+  }
+
+  .app-toast__alert.MuiAlert-filledSuccess {
+    background: var(--app-toast-gradient-success) !important;
+  }
+
+  .app-toast__alert.MuiAlert-filledError {
+    background: var(--app-toast-gradient-error) !important;
+  }
+
+  .app-toast__alert.MuiAlert-filledWarning {
+    background: var(--app-toast-gradient-warning) !important;
+  }
+
+  .app-toast__alert.MuiAlert-filledInfo {
+    background: var(--app-toast-gradient-info) !important;
+  }
+
+  .app-toast__alert.MuiAlert-filled:not(.MuiAlert-filledSuccess):not(.MuiAlert-filledError):not(
+      .MuiAlert-filledWarning
+    ):not(.MuiAlert-filledInfo) {
+    background: var(--app-toast-gradient-default) !important;
+  }
+
   .app-toast .MuiSlide-exiting .MuiAlert-root {
     animation: toast-out 0.3s cubic-bezier(0.4, 0, 1, 1) forwards;
   }

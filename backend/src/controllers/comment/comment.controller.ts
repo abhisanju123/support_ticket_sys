@@ -3,6 +3,7 @@ import type { Request, Response } from 'express';
 import {
   ApiResponse,
   getAuthenticatedUser,
+  getRouteParam,
   getTicketNumberParam,
   getValidatedBody,
   getValidatedQuery,
@@ -10,7 +11,7 @@ import {
 import { asyncHandler } from '../../middlewares/index.js';
 import type { CommentService } from '../../services/comment/comment.service.js';
 import type { CreateCommentInput } from '../../services/types/index.js';
-import type { CommentListQueryParams, CreateCommentBody } from '../types/comment.controller.types.js';
+import type { CommentListQueryParams, CreateCommentBody, UpdateCommentBody } from '../types/comment.controller.types.js';
 
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
@@ -40,5 +41,35 @@ export class CommentController {
     );
 
     ApiResponse.success(res, comments, 'Comments retrieved successfully');
+  });
+
+  updateComment = asyncHandler(async (req: Request, res: Response) => {
+    const user = getAuthenticatedUser(req);
+    const { message } = getValidatedBody<UpdateCommentBody>(req);
+
+    const comment = await this.commentService.updateComment(
+      {
+        ticketNumber: getTicketNumberParam(req, 'ticketId'),
+        commentId: getRouteParam(req, 'commentId'),
+        message,
+      },
+      user,
+    );
+
+    ApiResponse.success(res, comment, 'Comment updated successfully');
+  });
+
+  deleteComment = asyncHandler(async (req: Request, res: Response) => {
+    const user = getAuthenticatedUser(req);
+
+    await this.commentService.deleteComment(
+      {
+        ticketNumber: getTicketNumberParam(req, 'ticketId'),
+        commentId: getRouteParam(req, 'commentId'),
+      },
+      user,
+    );
+
+    ApiResponse.success(res, null, 'Comment deleted successfully');
   });
 }

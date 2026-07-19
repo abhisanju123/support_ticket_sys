@@ -1,7 +1,7 @@
 import { apiSlice } from '../../../api/baseApi.js';
 import { unwrapApiResponse } from '../../../utils/apiTransform.js';
 
-import { commentCreateInvalidationTags, commentListTag } from './commentTags.js';
+import { commentCreateInvalidationTags, commentListTag, commentMutationInvalidationTags } from './commentTags.js';
 
 export const commentsApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -28,7 +28,31 @@ export const commentsApi = apiSlice.injectEndpoints({
       transformResponse: unwrapApiResponse,
       invalidatesTags: (_result, _error, { ticketId }) => commentCreateInvalidationTags(ticketId),
     }),
+
+    updateComment: builder.mutation({
+      query: ({ ticketId, commentId, message }) => ({
+        url: `/tickets/${ticketId}/comments/${commentId}`,
+        method: 'PATCH',
+        body: { message },
+      }),
+      transformResponse: unwrapApiResponse,
+      invalidatesTags: (_result, _error, { ticketId }) => commentMutationInvalidationTags(ticketId),
+    }),
+
+    deleteComment: builder.mutation({
+      query: ({ ticketId, commentId }) => ({
+        url: `/tickets/${ticketId}/comments/${commentId}`,
+        method: 'DELETE',
+      }),
+      transformResponse: unwrapApiResponse,
+      invalidatesTags: (_result, _error, { ticketId }) => commentMutationInvalidationTags(ticketId),
+    }),
   }),
 });
 
-export const { useGetCommentsQuery, useCreateCommentMutation } = commentsApi;
+export const {
+  useGetCommentsQuery,
+  useCreateCommentMutation,
+  useUpdateCommentMutation,
+  useDeleteCommentMutation,
+} = commentsApi;

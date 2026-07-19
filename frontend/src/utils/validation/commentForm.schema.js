@@ -11,5 +11,9 @@ export const createCommentFormSchema = (validUserIds = []) =>
     createdBy: requiredUserFromListSchema(validUserIds, 'Please select comment author'),
   });
 
+export const editCommentFormSchema = z.object({
+  message: commentMessageSchema,
+});
+
 /** @deprecated Use createCommentFormSchema */
 export const addCommentFormSchema = createCommentFormSchema();

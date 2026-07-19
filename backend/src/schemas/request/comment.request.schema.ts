@@ -13,6 +13,12 @@ export const createCommentBodySchema = z
   })
   .strict();
 
+export const updateCommentBodySchema = z
+  .object({
+    message: z.string().trim().min(1, 'Message is required').max(5000),
+  })
+  .strict();
+
 export const commentListQuerySchema = paginationQueryFieldsSchema
   .extend({
     sortBy: z.enum(COMMENT_SORT_FIELDS).optional(),
@@ -20,4 +26,5 @@ export const commentListQuerySchema = paginationQueryFieldsSchema
   .transform((data) => buildPaginationOptions(data, COMMENT_SORT_FIELDS));
 
 export type CreateCommentBody = z.infer<typeof createCommentBodySchema>;
+export type UpdateCommentBody = z.infer<typeof updateCommentBodySchema>;
 export type CommentListQueryInput = z.infer<typeof commentListQuerySchema>;

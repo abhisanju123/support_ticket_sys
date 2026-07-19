@@ -14,6 +14,7 @@ export {
 export {
   addCommentFormSchema,
   createCommentFormSchema,
+  editCommentFormSchema,
 } from './commentForm.schema.js';
 
 export {

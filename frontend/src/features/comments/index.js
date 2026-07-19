@@ -8,5 +8,7 @@ export {
 export {
   commentsApi,
   useCreateCommentMutation,
+  useDeleteCommentMutation,
   useGetCommentsQuery,
+  useUpdateCommentMutation,
 } from './api/commentsApi.js';

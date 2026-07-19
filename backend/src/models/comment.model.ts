@@ -26,7 +26,7 @@ const commentSchema = new Schema(
     },
   },
   {
-    timestamps: { createdAt: true, updatedAt: false },
+    timestamps: true,
     collection: COLLECTIONS.COMMENTS,
   },
 );

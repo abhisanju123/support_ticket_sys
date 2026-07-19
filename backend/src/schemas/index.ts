@@ -6,9 +6,11 @@ export {
   commentListQuerySchema,
   createCommentBodySchema,
   createTicketBodySchema,
+  ticketCommentIdParamSchema,
   ticketCommentParamSchema,
   ticketIdParamSchema,
   ticketListQuerySchema,
+  updateCommentBodySchema,
   updateTicketBodySchema,
 } from './request/index.js';
 export type {
@@ -17,6 +19,7 @@ export type {
   CreateCommentBody,
   CreateTicketBody,
   TicketListQueryInput,
+  UpdateCommentBody,
   UpdateTicketBody,
 } from './request/index.js';
 export { ticketDocumentSchema } from './ticket.schema.js';
