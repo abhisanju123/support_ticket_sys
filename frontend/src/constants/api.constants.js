@@ -29,7 +29,7 @@ export const DEFAULT_API_HEADERS = {
 };
 
 /** RTK Query cache tag types for Ticket, Comment, and Dashboard endpoints. */
-export const API_TAG_TYPES = ['Ticket', 'Comment', 'Dashboard'];
+export const API_TAG_TYPES = ['Ticket', 'Comment', 'Dashboard', 'Notification'];
 
 /** Supported HTTP methods for future endpoint definitions. */
 export const HTTP_METHODS = {

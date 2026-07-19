@@ -16,6 +16,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
+    "test:integration": "jest --config jest.integration.config.js --testTimeout=60000",
     "seed": "tsx src/database/seed.ts",
     "prepare": "husky"
   },

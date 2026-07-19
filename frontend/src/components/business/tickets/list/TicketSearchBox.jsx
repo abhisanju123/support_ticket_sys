@@ -9,7 +9,7 @@ export function TicketSearchBox({
   return (
     <SearchInput
       label="Search tickets"
-      placeholder="Search by title or description"
+      placeholder="Search by title, people, priority, status, date, or ticket #"
       value={value}
       onChange={onChange}
       onSubmit={onSubmit}

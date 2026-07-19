@@ -18,6 +18,7 @@ export function TicketStatusControl({
   isUpdating = false,
   statusError = null,
   onDismissStatusError,
+  canChangeStatus = true,
 }) {
   const [nextStatus, setNextStatus] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -64,7 +65,7 @@ export function TicketStatusControl({
 
       <FormErrorAlert message={statusError} onClose={onDismissStatusError} />
 
-      {statusOptions.length > 0 ? (
+      {canChangeStatus && statusOptions.length > 0 ? (
         <Box component="form" onSubmit={handleSubmit} className="inline-spacing" sx={{ flexWrap: 'wrap' }}>
           <StatusDropdown
             value={nextStatus}
@@ -79,9 +80,13 @@ export function TicketStatusControl({
             {isUpdating ? 'Updating…' : 'Update Status'}
           </Button>
         </Box>
-      ) : (
+      ) : canChangeStatus ? (
         <Typography variant="body2" color="text.secondary">
           No further status transitions are available for this ticket.
+        </Typography>
+      ) : (
+        <Typography variant="body2" color="text.secondary">
+          Status changes are limited to support agents and administrators.
         </Typography>
       )}
 

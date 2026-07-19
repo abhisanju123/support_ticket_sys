@@ -6,6 +6,11 @@ export type {
 } from './repository.types.js';
 export type { CommentListOptions } from './comment.repository.types.js';
 export type {
+  NotificationCreateInput,
+  NotificationListOptions,
+  NotificationResponse,
+} from './notification.repository.types.js';
+export type {
   DashboardStatusCounts,
   StatusCountAggregate,
 } from './dashboard.repository.types.js';

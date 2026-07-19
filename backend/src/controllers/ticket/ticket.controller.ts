@@ -1,6 +1,12 @@
 import type { Request, Response } from 'express';
 
-import { ApiResponse, getTicketNumberParam, getValidatedBody, getValidatedQuery } from '../../helpers/index.js';
+import {
+  ApiResponse,
+  getAuthenticatedUser,
+  getTicketNumberParam,
+  getValidatedBody,
+  getValidatedQuery,
+} from '../../helpers/index.js';
 import { asyncHandler } from '../../middlewares/index.js';
 import type { DashboardStatisticsService } from '../../services/dashboard/dashboard-statistics.service.js';
 import type { TicketDeletionService } from '../../services/ticket/ticket-deletion.service.js';
@@ -27,59 +33,76 @@ export class TicketController {
   ) {}
 
   createTicket = asyncHandler(async (req: Request, res: Response) => {
+    const user = getAuthenticatedUser(req);
     const ticket = await this.ticketCreationService.createTicket(
       getValidatedBody<CreateTicketInput>(req),
+      user,
     );
 
     ApiResponse.created(res, ticket, 'Ticket created successfully');
   });
 
   listTickets = asyncHandler(async (req: Request, res: Response) => {
+    const user = getAuthenticatedUser(req);
     const query = getValidatedQuery<TicketListRequestQuery>(req);
 
     if (query.keyword || query.status) {
-      const tickets = await this.ticketSearchFilterService.listWithFilters({
-        keyword: query.keyword,
-        status: query.status,
-        skip: query.skip,
-        limit: query.limit,
-        sort: query.sort,
-      });
+      const tickets = await this.ticketSearchFilterService.listWithFilters(
+        {
+          keyword: query.keyword,
+          status: query.status,
+          skip: query.skip,
+          limit: query.limit,
+          sort: query.sort,
+        },
+        user,
+      );
 
       ApiResponse.success(res, tickets, 'Tickets retrieved successfully');
       return;
     }
 
-    const tickets = await this.ticketRetrievalService.getAllTickets({
-      skip: query.skip,
-      limit: query.limit,
-      sort: query.sort,
-    });
+    const tickets = await this.ticketRetrievalService.getAllTickets(
+      {
+        skip: query.skip,
+        limit: query.limit,
+        sort: query.sort,
+      },
+      user,
+    );
 
     ApiResponse.success(res, tickets, 'Tickets retrieved successfully');
   });
 
   getTicketById = asyncHandler(async (req: Request, res: Response) => {
-    const ticket = await this.ticketRetrievalService.getTicketById(getTicketNumberParam(req, 'id'));
+    const user = getAuthenticatedUser(req);
+    const ticket = await this.ticketRetrievalService.getTicketById(
+      getTicketNumberParam(req, 'id'),
+      user,
+    );
 
     ApiResponse.success(res, ticket, 'Ticket retrieved successfully');
   });
 
   updateTicket = asyncHandler(async (req: Request, res: Response) => {
+    const user = getAuthenticatedUser(req);
     const ticket = await this.ticketUpdateService.updateTicket(
       getTicketNumberParam(req, 'id'),
       getValidatedBody<UpdateTicketInput>(req),
+      user,
     );
 
     ApiResponse.success(res, ticket, 'Ticket updated successfully');
   });
 
   changeTicketStatus = asyncHandler(async (req: Request, res: Response) => {
+    const user = getAuthenticatedUser(req);
     const { status } = getValidatedBody<ChangeTicketStatusBody>(req);
 
     const ticket = await this.ticketStatusService.transitionStatus(
       getTicketNumberParam(req, 'id'),
       status,
+      user,
     );
 
     ApiResponse.success(res, ticket, 'Ticket status updated successfully');
@@ -91,8 +114,9 @@ export class TicketController {
     ApiResponse.success(res, null, 'Ticket deleted successfully');
   });
 
-  getDashboardStatistics = asyncHandler(async (_req: Request, res: Response) => {
-    const statistics = await this.dashboardStatisticsService.getStatistics();
+  getDashboardStatistics = asyncHandler(async (req: Request, res: Response) => {
+    const user = getAuthenticatedUser(req);
+    const statistics = await this.dashboardStatisticsService.getStatistics(user);
 
     ApiResponse.success(res, statistics, 'Dashboard statistics retrieved successfully');
   });

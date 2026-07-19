@@ -88,7 +88,8 @@ export function TicketToolbar({
         </Box>
       ) : (
         <Typography variant="caption" color="text.secondary">
-          Search by title or description and filter by status. Results are loaded from the server.
+          Search across title, assigned to, created by, priority, status, dates, and ticket ID.
+          Filter by status. Results are loaded from the server.
         </Typography>
       )}
     </>

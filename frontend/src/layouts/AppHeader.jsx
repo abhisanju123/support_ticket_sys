@@ -19,7 +19,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { alpha, useTheme } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link as RouterLink, useLocation } from 'react-router-dom';
 
 import { NotificationsMenu } from '../features/activity/index.js';
 import { CommandPaletteTrigger } from '../features/command-palette/components/CommandPaletteTrigger.jsx';
@@ -34,14 +34,18 @@ import { useAuth } from '../features/auth/hooks/useAuth.js';
 
 import { AppLogo } from './AppLogo.jsx';
 
-export function AppHeader({ onMenuClick }) {
+export function AppHeader({ onMenuClick, guest = false }) {
   const theme = useTheme();
   const navigate = useNavigate();
+  const location = useLocation();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const { user, logout } = useAuth();
+  const { user, logout, isAuthenticated } = useAuth();
   const [menuAnchor, setMenuAnchor] = useState(null);
 
+  const isGuest = guest || !isAuthenticated;
   const displayName = user?.name ?? 'User';
+  const isLoginPage = location.pathname === ROUTE_PATHS.LOGIN;
+  const isRegisterPage = location.pathname === ROUTE_PATHS.REGISTER;
 
   const handleOpenMenu = (event) => {
     setMenuAnchor(event.currentTarget);
@@ -103,7 +107,7 @@ export function AppHeader({ onMenuClick }) {
             minWidth: 0,
           }}
         >
-          {isMobile ? (
+          {isMobile && onMenuClick ? (
             <IconButton
               color="inherit"
               aria-label="open navigation menu"
@@ -118,6 +122,7 @@ export function AppHeader({ onMenuClick }) {
           <AppLogo
             size={isMobile ? MOBILE_HEADER_LOGO_SIZE : HEADER_LOGO_SIZE}
             showTitle
+            showLink={!isGuest}
           />
         </Box>
 
@@ -129,113 +134,142 @@ export function AppHeader({ onMenuClick }) {
             flexShrink: 0,
           }}
         >
-          <CommandPaletteTrigger />
-          <CommandPaletteTrigger compact />
+          {isGuest ? (
+            <>
+              {!isLoginPage ? (
+                <Button
+                  component={RouterLink}
+                  to={ROUTE_PATHS.LOGIN}
+                  variant="outlined"
+                  size="small"
+                  className="interactive-press"
+                >
+                  Sign in
+                </Button>
+              ) : null}
+              {!isRegisterPage ? (
+                <Button
+                  component={RouterLink}
+                  to={ROUTE_PATHS.REGISTER}
+                  variant="contained"
+                  size="small"
+                  className="app-btn--submit interactive-press"
+                >
+                  Create account
+                </Button>
+              ) : null}
+            </>
+          ) : (
+            <>
+              <CommandPaletteTrigger />
+              <CommandPaletteTrigger compact />
 
-          <Divider
-            orientation="vertical"
-            flexItem
-            sx={{
-              display: { xs: 'none', sm: 'block' },
-              my: 1,
-              mx: 0.25,
-              borderColor: 'divider',
-            }}
-          />
+              <Divider
+                orientation="vertical"
+                flexItem
+                sx={{
+                  display: { xs: 'none', sm: 'block' },
+                  my: 1,
+                  mx: 0.25,
+                  borderColor: 'divider',
+                }}
+              />
 
-          <NotificationsMenu />
+              <NotificationsMenu />
 
-          <Button
-            type="button"
-            onClick={handleOpenMenu}
-            aria-label="account menu"
-            aria-controls={menuAnchor ? 'account-menu' : undefined}
-            aria-haspopup="true"
-            aria-expanded={menuAnchor ? 'true' : undefined}
-            className="header-profile-btn interactive-press"
-            sx={{
-              ml: 0.25,
-              pl: 0.5,
-              pr: { xs: 0.5, sm: 1 },
-              py: 0.5,
-              minWidth: 0,
-              borderRadius: 2,
-              textTransform: 'none',
-              color: 'text.primary',
-              border: 1,
-              borderColor: 'divider',
-              bgcolor: 'background.paper',
-              '&:hover': {
-                bgcolor: 'action.hover',
-                borderColor: 'divider',
-              },
-            }}
-          >
-            <Avatar
-              sx={{
-                width: 32,
-                height: 32,
-                bgcolor: 'primary.main',
-                fontSize: '0.8125rem',
-                fontWeight: 700,
-              }}
-            >
-              {displayName.charAt(0).toUpperCase()}
-            </Avatar>
-
-            <Box sx={{ display: { xs: 'none', sm: 'block' }, textAlign: 'left', ml: 1, mr: 0.25 }}>
-              <Typography variant="body2" fontWeight={600} lineHeight={1.2} noWrap>
-                {displayName}
-              </Typography>
-            </Box>
-
-            <KeyboardArrowDownIcon
-              fontSize="small"
-              sx={{ display: { xs: 'none', sm: 'block' }, color: 'text.secondary' }}
-            />
-          </Button>
-
-          <Menu
-            id="account-menu"
-            anchorEl={menuAnchor}
-            open={Boolean(menuAnchor)}
-            onClose={handleCloseMenu}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-            slotProps={{
-              paper: {
-                sx: {
-                  mt: 1,
-                  minWidth: 220,
+              <Button
+                type="button"
+                onClick={handleOpenMenu}
+                aria-label="account menu"
+                aria-controls={menuAnchor ? 'account-menu' : undefined}
+                aria-haspopup="true"
+                aria-expanded={menuAnchor ? 'true' : undefined}
+                className="header-profile-btn interactive-press"
+                sx={{
+                  ml: 0.25,
+                  pl: 0.5,
+                  pr: { xs: 0.5, sm: 1 },
+                  py: 0.5,
+                  minWidth: 0,
                   borderRadius: 2,
+                  textTransform: 'none',
+                  color: 'text.primary',
                   border: 1,
                   borderColor: 'divider',
-                  boxShadow: 'var(--app-shadow-elevated)',
-                },
-              },
-            }}
-          >
-            <Box sx={{ px: 2, py: 1.5 }}>
-              <Typography variant="subtitle2" fontWeight={700}>
-                {displayName}
-              </Typography>
-            </Box>
+                  bgcolor: 'background.paper',
+                  '&:hover': {
+                    bgcolor: 'action.hover',
+                    borderColor: 'divider',
+                  },
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 32,
+                    height: 32,
+                    bgcolor: 'primary.main',
+                    fontSize: '0.8125rem',
+                    fontWeight: 700,
+                  }}
+                >
+                  {displayName.charAt(0).toUpperCase()}
+                </Avatar>
 
-            <Divider />
+                <Box sx={{ display: { xs: 'none', sm: 'block' }, textAlign: 'left', ml: 1, mr: 0.25 }}>
+                  <Typography variant="body2" fontWeight={600} lineHeight={1.2} noWrap>
+                    {displayName}
+                  </Typography>
+                </Box>
 
-            <MenuItem onClick={handleOpenSettings}>
-              <ListItemIcon>
-                <SettingsOutlinedIcon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText>Settings</ListItemText>
-            </MenuItem>
-            <MenuItem onClick={handleLogout}>
-              <ListItemIcon>
-                <LogoutOutlinedIcon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText>Sign out</ListItemText>
-            </MenuItem>
-          </Menu>
+                <KeyboardArrowDownIcon
+                  fontSize="small"
+                  sx={{ display: { xs: 'none', sm: 'block' }, color: 'text.secondary' }}
+                />
+              </Button>
+
+              <Menu
+                id="account-menu"
+                anchorEl={menuAnchor}
+                open={Boolean(menuAnchor)}
+                onClose={handleCloseMenu}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                slotProps={{
+                  paper: {
+                    sx: {
+                      mt: 1,
+                      minWidth: 220,
+                      borderRadius: 2,
+                      border: 1,
+                      borderColor: 'divider',
+                      boxShadow: 'var(--app-shadow-elevated)',
+                    },
+                  },
+                }}
+              >
+                <Box sx={{ px: 2, py: 1.5 }}>
+                  <Typography variant="subtitle2" fontWeight={700}>
+                    {displayName}
+                  </Typography>
+                </Box>
+
+                <Divider />
+
+                <MenuItem onClick={handleOpenSettings}>
+                  <ListItemIcon>
+                    <SettingsOutlinedIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText>Settings</ListItemText>
+                </MenuItem>
+                <MenuItem onClick={handleLogout}>
+                  <ListItemIcon>
+                    <LogoutOutlinedIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText>Sign out</ListItemText>
+                </MenuItem>
+              </Menu>
+            </>
+          )}
         </Box>
         </Container>
       </Toolbar>

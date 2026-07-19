@@ -1,4 +1,4 @@
-import { isValidObjectId, type QueryFilter } from 'mongoose';
+import { isValidObjectId, Types, type PipelineStage, type QueryFilter } from 'mongoose';
 
 import { getNextTicketNumber } from '../database/ticket-number.js';
 import { TicketStatus } from '../enums/ticket-status.enum.js';
@@ -107,11 +107,22 @@ export class TicketRepository extends BaseRepository<ITicketRecord> implements I
     return this.count(this.buildFilter(options) as QueryFilter<ITicketRecord>);
   }
 
-  async aggregateStatusCounts(): Promise<DashboardStatusCounts> {
+  async aggregateStatusCounts(accessibleToUserId?: string | ObjectId): Promise<DashboardStatusCounts> {
     try {
-      const grouped = await this.model.aggregate<{ _id: TicketStatus; count: number }>([
-        { $group: { _id: '$status', count: { $sum: 1 } } },
-      ]);
+      const pipeline: PipelineStage[] = [];
+
+      if (accessibleToUserId) {
+        const scopeUserId = this.toScopeObjectId(accessibleToUserId);
+        pipeline.push({
+          $match: {
+            $or: [{ createdBy: scopeUserId }, { assignedTo: scopeUserId }],
+          },
+        });
+      }
+
+      pipeline.push({ $group: { _id: '$status', count: { $sum: 1 } } });
+
+      const grouped = await this.model.aggregate<{ _id: TicketStatus; count: number }>(pipeline);
 
       const counts: DashboardStatusCounts = {
         total: 0,
@@ -200,8 +211,18 @@ export class TicketRepository extends BaseRepository<ITicketRecord> implements I
   }
 
   private buildFilter(options: TicketQueryOptions = {}): Record<string, unknown> {
-    const { filter = {}, status, priority, createdBy, assignedTo, keyword } = options;
+    const {
+      filter = {},
+      status,
+      priority,
+      createdBy,
+      assignedTo,
+      accessibleToUserId,
+      keyword,
+      keywordOr,
+    } = options;
     const mongoFilter: Record<string, unknown> = { ...filter };
+    const andClauses: Record<string, unknown>[] = [];
 
     if (status) {
       mongoFilter.status = status;
@@ -219,9 +240,24 @@ export class TicketRepository extends BaseRepository<ITicketRecord> implements I
       mongoFilter.assignedTo = assignedTo;
     }
 
-    if (keyword?.trim()) {
+    if (accessibleToUserId) {
+      const scopeUserId = this.toScopeObjectId(accessibleToUserId);
+      andClauses.push({
+        $or: [{ createdBy: scopeUserId }, { assignedTo: scopeUserId }],
+      });
+    }
+
+    if (keywordOr?.length) {
+      andClauses.push({ $or: keywordOr });
+    } else if (keyword?.trim()) {
       const regex = new RegExp(this.escapeRegex(keyword.trim()), 'i');
-      mongoFilter.$or = [{ title: regex }, { description: regex }];
+      andClauses.push({ $or: [{ title: regex }, { description: regex }] });
+    }
+
+    if (andClauses.length === 1) {
+      Object.assign(mongoFilter, andClauses[0]);
+    } else if (andClauses.length > 1) {
+      mongoFilter.$and = andClauses;
     }
 
     return mongoFilter;
@@ -229,5 +265,17 @@ export class TicketRepository extends BaseRepository<ITicketRecord> implements I
 
   private escapeRegex(value: string): string {
     return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  private toScopeObjectId(id: string | ObjectId): Types.ObjectId {
+    if (id instanceof Types.ObjectId) {
+      return id;
+    }
+
+    if (!isValidObjectId(id)) {
+      throw new Error('Invalid user scope identifier');
+    }
+
+    return new Types.ObjectId(id);
   }
 }

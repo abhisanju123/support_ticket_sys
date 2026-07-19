@@ -9,7 +9,7 @@ import { MetadataGrid, MetadataItem } from '../../../components/business/shared/
 import { TicketTablePriorityLabel } from '../../../components/business/tickets/list/TicketTablePriorityLabel.jsx';
 import { TicketTableStatusLabel } from '../../../components/business/tickets/list/TicketTableStatusLabel.jsx';
 import { buildEditTicketPath } from '../../../constants/routes.constants.js';
-import { TICKET_PRIORITY_LABELS, TICKET_STATUS_LABELS, isTicketEditable } from '../constants/ticket.constants.js';
+import { TICKET_PRIORITY_LABELS, TICKET_STATUS_LABELS } from '../constants/ticket.constants.js';
 import { formatTicketDate, formatTicketId, getTicketRouteId } from '../utils/ticketFormatters.js';
 
 import { TicketUserCell } from './TicketUserCell.jsx';
@@ -21,8 +21,13 @@ import { TicketUserCell } from './TicketUserCell.jsx';
  *   isDeleting?: boolean;
  * }} props
  */
-export function TicketDetailsInfo({ ticket, onDelete, isDeleting = false }) {
-  const canEdit = isTicketEditable(ticket);
+export function TicketDetailsInfo({
+  ticket,
+  onDelete,
+  isDeleting = false,
+  canEdit = false,
+  showDelete = false,
+}) {
 
   return (
     <Box className="surface-card shadow-elevated card-spacing stack-spacing">
@@ -66,7 +71,7 @@ export function TicketDetailsInfo({ ticket, onDelete, isDeleting = false }) {
               Edit Ticket
             </Button>
           ) : null}
-          {onDelete ? (
+          {showDelete && onDelete ? (
             <Button
               variant="outlined"
               color="error"

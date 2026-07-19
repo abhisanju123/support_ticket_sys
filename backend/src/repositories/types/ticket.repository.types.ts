@@ -17,10 +17,19 @@ export interface TicketListOptions extends FindAllOptions {
   priority?: TicketPriority;
   createdBy?: string | ObjectId;
   assignedTo?: string | ObjectId;
+  accessibleToUserId?: string | ObjectId;
   keyword?: string;
+  keywordOr?: Record<string, unknown>[];
 }
 
 export type TicketQueryOptions = Pick<
   TicketListOptions,
-  'filter' | 'status' | 'priority' | 'createdBy' | 'assignedTo' | 'keyword'
+  | 'filter'
+  | 'status'
+  | 'priority'
+  | 'createdBy'
+  | 'assignedTo'
+  | 'accessibleToUserId'
+  | 'keyword'
+  | 'keywordOr'
 >;

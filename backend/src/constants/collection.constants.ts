@@ -2,6 +2,7 @@ export const COLLECTIONS = {
   USERS: 'users',
   TICKETS: 'tickets',
   COMMENTS: 'comments',
+  NOTIFICATIONS: 'notifications',
   COUNTERS: 'counters',
 } as const;
 

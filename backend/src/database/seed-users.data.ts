@@ -88,4 +88,9 @@ export const getSeedUsers = (): SeedUser[] => [
     email: 'nina@example.com',
     role: UserRole.EMPLOYEE,
   }),
+  envUser('ABHISHEK', {
+    name: 'Abhishek Mishra',
+    email: 'abhishek@example.com',
+    role: UserRole.EMPLOYEE,
+  }),
 ];

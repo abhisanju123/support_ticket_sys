@@ -4,6 +4,7 @@ export const DASHBOARD_CHART_STATUSES = [
   { statsKey: 'inProgress', statusKey: 'in_progress', label: 'In Progress' },
   { statsKey: 'resolved', statusKey: 'resolved', label: 'Resolved' },
   { statsKey: 'closed', statusKey: 'closed', label: 'Closed' },
+  { statsKey: 'cancelled', statusKey: 'cancelled', label: 'Cancelled' },
 ];
 
 export const DASHBOARD_RECENT_TICKET_LIMIT = 8;

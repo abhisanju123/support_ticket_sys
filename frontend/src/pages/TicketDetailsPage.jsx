@@ -9,8 +9,8 @@ import {
   PageContainer,
 } from '../components/business';
 import { EmptyTicketsIllustration, NotFoundState } from '../components/common';
-import { buildTicketDetailsPath, ROUTE_PATHS } from '../constants';
-import { addActivityEvent } from '../features/activity';
+import { ROUTE_PATHS } from '../constants';
+import { usePermissions } from '../features/auth/hooks/usePermissions.js';
 import { useGetCommentsQuery, useCreateCommentMutation } from '../features/comments';
 import { useGetUsersQuery } from '../features/users/api/usersApi.js';
 import { TicketActivityTimeline } from '../features/tickets/components/TicketActivityTimeline.jsx';
@@ -28,7 +28,6 @@ import {
   useUpdateTicketStatusMutation,
 } from '../features/tickets';
 import { buildTicketActivity } from '../features/tickets/utils/buildTicketActivity.js';
-import { formatTicketId } from '../features/tickets/utils/ticketFormatters.js';
 import { useAppDispatch } from '../hooks';
 import { showNotification } from '../store/notification/notificationSlice.js';
 import { getApiErrorMessage, getApiErrorNotificationMessage, isFetchBaseQueryError } from '../utils';
@@ -45,6 +44,8 @@ export function TicketDetailsPage() {
   const [updateStatus, { isLoading: isUpdatingStatus }] = useUpdateTicketStatusMutation();
   const [deleteTicket, { isLoading: isDeleting }] = useDeleteTicketMutation();
   const [createComment, { isLoading: isCreatingComment }] = useCreateCommentMutation();
+  const { canEditTicket, canDeleteTicket, canChangeTicketStatus, canCommentOnTicket } =
+    usePermissions();
 
   const usersById = useMemo(() => new Map(users.map((user) => [user._id, user])), [users]);
 
@@ -84,13 +85,12 @@ export function TicketDetailsPage() {
     );
   }
 
-  const statusOptions = (TICKET_STATUS_TRANSITIONS[ticket.status] ?? []).map((status) => ({
-    value: status,
-    label: TICKET_STATUS_LABELS[status],
-  }));
-
-  const ticketLabel = formatTicketId(ticket);
-  const ticketPath = buildTicketDetailsPath(ticketId);
+  const statusOptions = canChangeTicketStatus()
+    ? (TICKET_STATUS_TRANSITIONS[ticket.status] ?? []).map((status) => ({
+        value: status,
+        label: TICKET_STATUS_LABELS[status],
+      }))
+    : [];
 
   const handleStatusChange = async (status) => {
     setStatusError(null);
@@ -102,15 +102,6 @@ export function TicketDetailsPage() {
         showNotification({
           message: 'Ticket status updated successfully.',
           severity: 'success',
-        }),
-      );
-
-      dispatch(
-        addActivityEvent({
-          type: 'status_changed',
-          message: `${ticketLabel} status updated to ${TICKET_STATUS_LABELS[status] ?? status}`,
-          ticketId,
-          path: ticketPath,
         }),
       );
     } catch (submitError) {
@@ -153,15 +144,6 @@ export function TicketDetailsPage() {
         severity: 'success',
       }),
     );
-
-    dispatch(
-      addActivityEvent({
-        type: 'comment_added',
-        message: `New comment on ${ticketLabel}`,
-        ticketId,
-        path: ticketPath,
-      }),
-    );
   };
 
   return (
@@ -170,6 +152,8 @@ export function TicketDetailsPage() {
         ticket={ticket}
         onDelete={() => setIsDeleteDialogOpen(true)}
         isDeleting={isDeleting}
+        canEdit={canEditTicket(ticket)}
+        showDelete={canDeleteTicket()}
       />
       <TicketStatusControl
         currentStatus={ticket.status}
@@ -180,6 +164,7 @@ export function TicketDetailsPage() {
         isUpdating={isUpdatingStatus}
         statusError={statusError}
         onDismissStatusError={() => setStatusError(null)}
+        canChangeStatus={canChangeTicketStatus()}
       />
 
       <TicketActivityTimeline events={activityEvents} />
@@ -191,6 +176,7 @@ export function TicketDetailsPage() {
           comments={comments}
           onAddComment={handleAddComment}
           isSubmitting={isCreatingComment}
+          canComment={canCommentOnTicket(ticket)}
         />
       )}
 

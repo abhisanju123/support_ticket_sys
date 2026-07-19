@@ -11,7 +11,7 @@ import {
 } from '../components/business';
 import { buildTicketDetailsPath } from '../constants';
 import { EditTicketForm } from '../features/tickets/components/EditTicketForm.jsx';
-import { isTicketEditable } from '../features/tickets/constants/ticket.constants.js';
+import { usePermissions } from '../features/auth/hooks/usePermissions.js';
 import { useGetTicketByIdQuery, useUpdateTicketMutation } from '../features/tickets';
 import { useAppDispatch } from '../hooks';
 import { showNotification } from '../store/notification/notificationSlice.js';
@@ -24,6 +24,7 @@ export function EditTicketPage() {
   const dispatch = useAppDispatch();
   const { data: ticket, isLoading, isError, error } = useGetTicketByIdQuery(ticketId);
   const [updateTicket, { isLoading: isSaving }] = useUpdateTicketMutation();
+  const { canEditTicket } = usePermissions();
 
   if (isLoading) {
     return <LoadingSpinner message="Loading ticket..." />;
@@ -46,16 +47,16 @@ export function EditTicketPage() {
     return <EmptyState title="Ticket unavailable" description="This ticket could not be loaded." />;
   }
 
-  if (!isTicketEditable(ticket)) {
+  if (!canEditTicket(ticket)) {
     return (
       <PageContainer>
         <PageHeader
           title="Edit Ticket"
-          description="Closed tickets are read-only and cannot be modified."
+          description="Closed and cancelled tickets are read-only and cannot be modified."
         />
         <EmptyState
           title="This ticket cannot be edited"
-          description="Tickets with a Closed status are locked. View the ticket details or change the status before editing."
+          description="You do not have permission to edit this ticket, or it is closed or cancelled."
           action={
             <Button
               variant="contained"

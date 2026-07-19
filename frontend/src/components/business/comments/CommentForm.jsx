@@ -19,6 +19,7 @@ export function CommentForm({
   submitLabel = 'Add Comment',
   globalError = null,
   onDismissGlobalError,
+  showAuthorPicker = true,
 }) {
   return (
     <Box component="form" onSubmit={onSubmit} className="app-form" noValidate>
@@ -27,15 +28,17 @@ export function CommentForm({
       <Box className="app-form-fields">
         <CommentInput register={register?.('message')} error={errors.message} disabled={isSubmitting} />
 
-        <CreatedByDropdown
-          label="Comment author"
-          name="createdBy"
-          value={values.createdBy ?? ''}
-          onChange={(event) => onFieldChange?.('createdBy', event.target.value)}
-          users={users}
-          isLoading={usersLoading}
-          error={errors.createdBy}
-        />
+        {showAuthorPicker ? (
+          <CreatedByDropdown
+            label="Comment author"
+            name="createdBy"
+            value={values.createdBy ?? ''}
+            onChange={(event) => onFieldChange?.('createdBy', event.target.value)}
+            users={users}
+            isLoading={usersLoading}
+            error={errors.createdBy}
+          />
+        ) : null}
       </Box>
 
       <Box className="app-form-actions">

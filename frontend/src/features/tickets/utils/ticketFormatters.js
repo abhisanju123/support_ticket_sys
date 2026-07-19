@@ -193,3 +193,22 @@ export const formatTicketId = (ticketOrNumber) => {
 
   return '—';
 };
+
+/**
+ * User-facing ticket label for notifications and activity messages.
+ * @param {{ ticketNumber?: number; _id?: string; title?: string } | null | undefined} ticket
+ */
+export const formatTicketReference = (ticket) => {
+  if (!ticket) {
+    return 'a ticket';
+  }
+
+  const id = formatTicketId(ticket);
+  const title = typeof ticket === 'object' && ticket.title ? String(ticket.title).trim() : '';
+
+  if (title) {
+    return `Ticket #${id} — ${title}`;
+  }
+
+  return `Ticket #${id}`;
+};

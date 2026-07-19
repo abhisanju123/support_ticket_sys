@@ -12,6 +12,7 @@ import { ROUTE_PATHS } from '../constants/routes.constants.js';
  *   showLink?: boolean;
  *   showTitle?: boolean;
  *   layout?: 'row' | 'column';
+ *   tone?: 'dark' | 'light';
  * }} props
  */
 export function AppLogo({
@@ -19,6 +20,7 @@ export function AppLogo({
   showLink = true,
   showTitle = false,
   layout = 'row',
+  tone = 'dark',
 }) {
   const isColumn = layout === 'column';
 
@@ -41,6 +43,9 @@ export function AppLogo({
           height: size,
           display: 'block',
           flexShrink: 0,
+          ...(tone === 'light' && {
+            filter: 'brightness(0) invert(1)',
+          }),
         }}
       />
 
@@ -50,7 +55,7 @@ export function AppLogo({
           component="span"
           fontWeight={700}
           sx={{
-            color: 'text.primary',
+            color: tone === 'light' ? 'common.white' : 'text.primary',
             lineHeight: 1.2,
             maxWidth: isColumn ? 'none' : { xs: 150, sm: 220 },
           }}

@@ -28,6 +28,7 @@ export function TicketForm({
   priorityOptions = [],
   users = [],
   usersLoading = false,
+  showReporterPicker = true,
   readOnlySection = null,
   onCancel,
   onReset,
@@ -111,7 +112,12 @@ export function TicketForm({
                     users={users}
                     isLoading={usersLoading}
                     error={errors.createdBy}
-                    helperText="Reporter for this ticket"
+                    helperText={
+                      showReporterPicker
+                        ? 'Reporter for this ticket'
+                        : 'You are the reporter for tickets you create'
+                    }
+                    disabled={!showReporterPicker}
                     required
                   />
 

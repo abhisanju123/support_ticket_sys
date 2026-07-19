@@ -6,3 +6,4 @@ export {
   TERMINAL_TICKET_STATUSES,
 } from './ticket-status.enum.js';
 export { UserRole, USER_ROLES } from './user-role.enum.js';
+export { Permission, PERMISSIONS } from './permission.enum.js';

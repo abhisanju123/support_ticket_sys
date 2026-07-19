@@ -19,7 +19,7 @@ export function DashboardStatusBreakdownChart({ segments = [] }) {
           Status Breakdown
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Open, in progress, resolved, and closed tickets
+          Open, in progress, resolved, closed, and cancelled tickets
         </Typography>
       </Box>
 

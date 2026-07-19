@@ -1,7 +1,6 @@
 import { combineReducers } from '@reduxjs/toolkit';
 
 import { baseApi } from '../api/baseApi.js';
-import { activityFeedReducer } from '../features/activity/store/activityFeedSlice.js';
 import { authReducer } from '../features/auth/store/authSlice.js';
 import { commandPaletteReducer } from '../features/command-palette/store/commandPaletteSlice.js';
 import { commentsUiReducer } from '../features/comments/store/commentsUiSlice.js';
@@ -20,7 +19,6 @@ import { notificationReducer } from './notification/notificationSlice.js';
 export const rootReducer = combineReducers({
   [baseApi.reducerPath]: baseApi.reducer,
   auth: authReducer,
-  activityFeed: activityFeedReducer,
   commandPalette: commandPaletteReducer,
   ticketsUi: ticketsUiReducer,
   dashboardUi: dashboardUiReducer,

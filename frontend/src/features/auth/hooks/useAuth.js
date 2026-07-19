@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
 
 import { useAppDispatch, useAppSelector } from '../../../hooks/index.js';
-import { clearActivityFeed } from '../../activity/store/activityFeedSlice.js';
 import { clearCredentials, selectCurrentUser, selectIsAuthenticated } from '../store/authSlice.js';
 
 export function useAuth() {
@@ -11,7 +10,6 @@ export function useAuth() {
 
   const logout = useCallback(() => {
     dispatch(clearCredentials());
-    dispatch(clearActivityFeed());
   }, [dispatch]);
 
   return {

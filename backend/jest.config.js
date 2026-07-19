@@ -17,6 +17,7 @@ module.exports = {
     ],
   },
   setupFiles: ['<rootDir>/src/tests/setup/env.setup.ts'],
+  testPathIgnorePatterns: ['/node_modules/', '/tests/integration/'],
   clearMocks: true,
   passWithNoTests: true,
   collectCoverageFrom: ['src/**/*.ts', '!src/tests/**', '!src/index.ts'],

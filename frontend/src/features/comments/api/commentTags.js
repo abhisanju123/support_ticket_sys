@@ -10,4 +10,5 @@ export const commentCreateInvalidationTags = (ticketId) => [
   { type: 'Ticket', id: ticketId },
   { type: 'Dashboard', id: 'STATS' },
   { type: 'Ticket', id: 'LIST' },
+  { type: 'Notification', id: 'LIST' },
 ];

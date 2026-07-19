@@ -2,6 +2,7 @@ import { useEffect, useMemo } from 'react';
 
 import { TicketForm } from '../../../components/business/tickets/form/TicketForm.jsx';
 import { useAuth } from '../../auth/hooks/useAuth.js';
+import { usePermissions } from '../../auth/hooks/usePermissions.js';
 import { useGetUsersQuery } from '../../users/api/usersApi.js';
 import { TICKET_PRIORITIES, TICKET_PRIORITY_LABELS } from '../constants/ticket.constants.js';
 import {
@@ -25,6 +26,8 @@ const defaultValues = {
 
 export function CreateTicketForm({ onSubmit, onCancel, isSubmitting = false }) {
   const { user } = useAuth();
+  const { mustCreateTicketAsSelf } = usePermissions();
+  const lockReporter = mustCreateTicketAsSelf();
   const { data: users = [], isLoading: usersLoading } = useGetUsersQuery();
   const validUserIds = useMemo(() => users.map((entry) => entry._id), [users]);
   const schema = useMemo(() => createCreateTicketFormSchema(validUserIds), [validUserIds]);
@@ -46,7 +49,16 @@ export function CreateTicketForm({ onSubmit, onCancel, isSubmitting = false }) {
   const values = watch();
 
   useEffect(() => {
-    if (usersLoading || users.length === 0 || values.createdBy) {
+    if (usersLoading || users.length === 0) {
+      return;
+    }
+
+    if (lockReporter && user?._id) {
+      setValue('createdBy', user._id, { shouldValidate: true });
+      return;
+    }
+
+    if (values.createdBy) {
       return;
     }
 
@@ -57,7 +69,7 @@ export function CreateTicketForm({ onSubmit, onCancel, isSubmitting = false }) {
     if (matchedUser) {
       setValue('createdBy', matchedUser._id, { shouldValidate: true });
     }
-  }, [users, usersLoading, user, values.createdBy, setValue]);
+  }, [users, usersLoading, user, values.createdBy, setValue, lockReporter]);
 
   return (
     <TicketForm
@@ -73,6 +85,7 @@ export function CreateTicketForm({ onSubmit, onCancel, isSubmitting = false }) {
       priorityOptions={priorityOptions}
       users={users}
       usersLoading={usersLoading}
+      showReporterPicker={!lockReporter}
       onSubmit={submitHandler}
       onCancel={onCancel}
       onReset={() => resetFormState(form, defaultValues, clearGlobalError)}

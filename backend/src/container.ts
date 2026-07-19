@@ -1,9 +1,10 @@
-import { CommentRepository, TicketRepository, UserRepository } from './repositories/index.js';
+import { CommentRepository, NotificationRepository, TicketRepository, UserRepository } from './repositories/index.js';
 import { AuthController } from './controllers/auth/auth.controller.js';
-import { CommentController, TicketController, UserController } from './controllers/index.js';
+import { CommentController, NotificationController, TicketController, UserController } from './controllers/index.js';
 import { CommentService } from './services/comment/comment.service.js';
 import { AuthService } from './services/auth/auth.service.js';
 import { DashboardStatisticsService } from './services/dashboard/dashboard-statistics.service.js';
+import { NotificationService } from './services/notification/notification.service.js';
 import { TicketDeletionService } from './services/ticket/ticket-deletion.service.js';
 import { TicketCreationService } from './services/ticket/ticket-creation.service.js';
 import { TicketRetrievalService } from './services/ticket/ticket-retrieval.service.js';
@@ -16,6 +17,7 @@ export interface AppControllers {
   ticketController: TicketController;
   commentController: CommentController;
   userController: UserController;
+  notificationController: NotificationController;
 }
 
 export interface AppServices {
@@ -28,21 +30,28 @@ export const createAppControllers = (): AppContainer => {
   const ticketRepository = new TicketRepository();
   const userRepository = new UserRepository();
   const commentRepository = new CommentRepository();
+  const notificationRepository = new NotificationRepository();
 
   const authService = new AuthService(userRepository);
   const authController = new AuthController(authService);
+  const notificationService = new NotificationService(notificationRepository, userRepository);
 
   const ticketCreationService = new TicketCreationService(ticketRepository, userRepository);
   const ticketRetrievalService = new TicketRetrievalService(ticketRepository);
-  const ticketUpdateService = new TicketUpdateService(ticketRepository, userRepository);
+  const ticketUpdateService = new TicketUpdateService(
+    ticketRepository,
+    userRepository,
+    notificationService,
+  );
   const ticketDeletionService = new TicketDeletionService(ticketRepository, commentRepository);
-  const ticketStatusService = new TicketStatusService(ticketRepository);
-  const ticketSearchFilterService = new TicketSearchFilterService(ticketRepository);
+  const ticketStatusService = new TicketStatusService(ticketRepository, notificationService);
+  const ticketSearchFilterService = new TicketSearchFilterService(ticketRepository, userRepository);
   const dashboardStatisticsService = new DashboardStatisticsService(ticketRepository);
   const commentService = new CommentService(
     commentRepository,
     ticketRepository,
     userRepository,
+    notificationService,
   );
 
   const ticketController = new TicketController(
@@ -57,6 +66,7 @@ export const createAppControllers = (): AppContainer => {
 
   const commentController = new CommentController(commentService);
   const userController = new UserController(userRepository);
+  const notificationController = new NotificationController(notificationService);
 
   return {
     authController,
@@ -64,5 +74,6 @@ export const createAppControllers = (): AppContainer => {
     ticketController,
     commentController,
     userController,
+    notificationController,
   };
 };

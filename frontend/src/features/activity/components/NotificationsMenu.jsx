@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import SwapHorizOutlinedIcon from '@mui/icons-material/SwapHorizOutlined';
 import Badge from '@mui/material/Badge';
@@ -10,31 +11,35 @@ import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 
-import { useAppDispatch, useAppSelector } from '../../../hooks/index.js';
-import {
-  markActivityRead,
-  markAllActivityRead,
-  selectActivityFeed,
-  selectUnreadActivityCount,
-} from '../store/activityFeedSlice.js';
+import { buildTicketDetailsPath } from '../../../constants/routes.constants.js';
 import { formatRelativeTime } from '../../tickets/utils/ticketFormatters.js';
+import {
+  useGetNotificationsQuery,
+  useMarkAllNotificationsReadMutation,
+  useMarkNotificationReadMutation,
+} from '../../notifications/index.js';
 
 const TYPE_ICONS = {
   status_changed: SwapHorizOutlinedIcon,
   comment_added: ChatBubbleOutlineOutlinedIcon,
+  ticket_updated: EditOutlinedIcon,
 };
 
 export function NotificationsMenu() {
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const items = useAppSelector(selectActivityFeed);
-  const unreadCount = useAppSelector(selectUnreadActivityCount);
+  const { data: items = [], isLoading } = useGetNotificationsQuery(undefined, {
+    pollingInterval: 30_000,
+  });
+  const [markNotificationRead] = useMarkNotificationReadMutation();
+  const [markAllNotificationsRead] = useMarkAllNotificationsReadMutation();
   const [anchorEl, setAnchorEl] = useState(null);
+
+  const unreadItems = useMemo(() => items.filter((item) => !item.read), [items]);
+  const unreadCount = unreadItems.length;
 
   const handleOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -44,17 +49,17 @@ export function NotificationsMenu() {
     setAnchorEl(null);
   };
 
-  const handleSelect = (item) => {
-    dispatch(markActivityRead(item.id));
-    handleClose();
-
-    if (item.path) {
-      navigate(item.path);
+  const handleSelect = async (item) => {
+    if (!item.read) {
+      await markNotificationRead(item._id);
     }
+
+    handleClose();
+    navigate(buildTicketDetailsPath(item.ticketNumber));
   };
 
-  const handleMarkAllRead = () => {
-    dispatch(markAllActivityRead());
+  const handleMarkAllRead = async () => {
+    await markAllNotificationsRead();
   };
 
   return (
@@ -71,10 +76,15 @@ export function NotificationsMenu() {
         onClose={handleClose}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        slotProps={{ paper: { sx: { width: 360, maxWidth: '100%' } } }}
+        slotProps={{
+          paper: {
+            className: 'notifications-menu',
+            sx: { width: 'min(420px, calc(100vw - 1.5rem))', maxWidth: '100%' },
+          },
+        }}
       >
         <Box sx={{ px: 2, py: 1.5 }}>
-          <Box className="inline-spacing" sx={{ justifyContent: 'space-between' }}>
+          <Box className="inline-spacing" sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
             <Typography variant="subtitle1" fontWeight={600}>
               Notifications
             </Typography>
@@ -88,28 +98,46 @@ export function NotificationsMenu() {
 
         <Divider />
 
-        {items.length === 0 ? (
+        {isLoading ? (
           <Typography variant="body2" color="text.secondary" sx={{ px: 2, py: 2 }}>
-            Activity from status changes and comments will appear here.
+            Loading notifications...
+          </Typography>
+        ) : unreadItems.length === 0 ? (
+          <Typography variant="body2" color="text.secondary" sx={{ px: 2, py: 2 }}>
+            You&apos;re all caught up. New activity will appear here.
           </Typography>
         ) : (
-          items.slice(0, 8).map((item) => {
+          unreadItems.slice(0, 10).map((item) => {
             const Icon = TYPE_ICONS[item.type] ?? NotificationsNoneOutlinedIcon;
 
             return (
               <MenuItem
-                key={item.id}
+                key={item._id}
                 onClick={() => handleSelect(item)}
-                sx={{ alignItems: 'flex-start', gap: 1, bgcolor: item.read ? 'transparent' : 'action.hover' }}
+                className="notifications-menu__item"
+                sx={{
+                  alignItems: 'flex-start',
+                  gap: 1,
+                  py: 1.25,
+                  px: 2,
+                  bgcolor: 'action.hover',
+                }}
               >
-                <ListItemIcon sx={{ minWidth: 32, mt: 0.25 }}>
+                <ListItemIcon sx={{ minWidth: 32, mt: 0.35 }}>
                   <Icon fontSize="small" />
                 </ListItemIcon>
-                <ListItemText
-                  primary={item.message}
-                  secondary={formatRelativeTime(item.timestamp)}
-                  primaryTypographyProps={{ variant: 'body2' }}
-                />
+
+                <Box className="notifications-menu__content">
+                  <Typography variant="body2" className="notifications-menu__message">
+                    {item.message}
+                  </Typography>
+                  <Typography variant="body2" className="notifications-menu__ticket">
+                    Ticket #{item.ticketNumber} — {item.ticketTitle}
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary" className="notifications-menu__time">
+                    {formatRelativeTime(item.createdAt)}
+                  </Typography>
+                </Box>
               </MenuItem>
             );
           })

@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 
 import { TicketTable } from '../../../components/business/tickets/list/TicketTable.jsx';
+import { usePermissions } from '../../auth/hooks/usePermissions.js';
 import { buildEditTicketPath, buildTicketDetailsPath } from '../../../constants/routes.constants.js';
 import {
   TICKET_LIST_COLUMNS,
   TICKET_PRIORITY_LABELS,
   TICKET_STATUS_LABELS,
-  isTicketEditable,
 } from '../constants/ticket.constants.js';
 import { formatTicketId, formatTicketTableDate, formatTicketUser, getTicketRouteId } from '../utils/ticketFormatters.js';
 
@@ -26,6 +26,8 @@ export function TicketListTable({
   embedded = false,
 }) {
   const navigate = useNavigate();
+  const { canEditTicket, canDeleteTicket } = usePermissions();
+  const allowDelete = canDeleteTicket();
 
   return (
     <TicketTable
@@ -51,10 +53,10 @@ export function TicketListTable({
         createdAtLabel: formatTicketTableDate(ticket.createdAt),
         updatedAtLabel: formatTicketTableDate(ticket.updatedAt),
         onView: () => navigate(buildTicketDetailsPath(getTicketRouteId(ticket))),
-        onEdit: isTicketEditable(ticket)
+        onEdit: canEditTicket(ticket)
           ? () => navigate(buildEditTicketPath(getTicketRouteId(ticket)))
           : undefined,
-        onDelete: onDelete ? () => onDelete(ticket) : undefined,
+        onDelete: onDelete && allowDelete ? () => onDelete(ticket) : undefined,
       })}
     />
   );

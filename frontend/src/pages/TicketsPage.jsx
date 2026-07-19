@@ -15,6 +15,7 @@ import {
 } from '../components/business';
 import { EmptyTicketsIllustration } from '../components/common';
 import { ROUTE_PATHS } from '../constants';
+import { usePermissions } from '../features/auth/hooks/usePermissions.js';
 import { useAppDispatch } from '../hooks';
 import { showNotification } from '../store/notification/notificationSlice.js';
 import { getApiErrorMessage, getApiErrorNotificationMessage } from '../utils';
@@ -37,6 +38,7 @@ export function TicketsPage() {
   const dispatch = useAppDispatch();
   const [ticketToDelete, setTicketToDelete] = useState(null);
   const [deleteTicket, { isLoading: isDeleting }] = useDeleteTicketMutation();
+  const { canCreateTicket, canDeleteTicket } = usePermissions();
   const {
     searchInput,
     setSearchInput,
@@ -130,14 +132,16 @@ export function TicketsPage() {
         title="Tickets"
         description="Browse, search, and manage support tickets."
         actions={
-          <Button
-            component={RouterLink}
-            to={ROUTE_PATHS.CREATE_TICKET}
-            variant="contained"
-            startIcon={<AddIcon />}
-          >
-            Create Ticket
-          </Button>
+          canCreateTicket() ? (
+            <Button
+              component={RouterLink}
+              to={ROUTE_PATHS.CREATE_TICKET}
+              variant="contained"
+              startIcon={<AddIcon />}
+            >
+              Create Ticket
+            </Button>
+          ) : null
         }
       />
 
@@ -170,7 +174,7 @@ export function TicketsPage() {
               pageSize={pagination.pageSize}
               onPageChange={setPage}
               onPageSizeChange={setPageSize}
-              onDelete={setTicketToDelete}
+              onDelete={canDeleteTicket() ? setTicketToDelete : undefined}
               isLoading={isFetching}
               showSkeleton={showSkeleton}
             />
@@ -185,9 +189,11 @@ export function TicketsPage() {
             description="Create the first support ticket to get started."
             illustration={<EmptyTicketsIllustration />}
             action={
-              <Button component={RouterLink} to={ROUTE_PATHS.CREATE_TICKET} variant="contained">
-                Create Ticket
-              </Button>
+              canCreateTicket() ? (
+                <Button component={RouterLink} to={ROUTE_PATHS.CREATE_TICKET} variant="contained">
+                  Create Ticket
+                </Button>
+              ) : null
             }
           />
         ) : null}

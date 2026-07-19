@@ -23,5 +23,6 @@ export type {
 } from './ticket.request.schema.js';
 export { commentListQuerySchema, createCommentBodySchema } from './comment.request.schema.js';
 export type { CommentListQueryInput, CreateCommentBody } from './comment.request.schema.js';
+export { notificationIdParamSchema } from './notification.request.schema.js';
 export { loginBodySchema, registerBodySchema } from './auth.request.schema.js';
 export type { LoginBody, RegisterBody } from './auth.request.schema.js';

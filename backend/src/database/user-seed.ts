@@ -26,10 +26,12 @@ export const seedUsers = async (): Promise<SeedSummary> => {
       const result = await User.updateOne(
         { email },
         {
-          $setOnInsert: {
+          $set: {
             name: user.name.trim(),
-            email,
             role: user.role,
+          },
+          $setOnInsert: {
+            email,
             passwordHash,
           },
         },

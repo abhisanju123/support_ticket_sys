@@ -1,31 +1,36 @@
+import { assertCanEditTicket } from '../../authorization/ticket-access.js';
 import { TICKET_PRIORITIES } from '../../enums/ticket-priority.enum.js';
-import { TicketStatus } from '../../enums/ticket-status.enum.js';
 import type { ITicketRecord } from '../../interfaces/ticket.interface.js';
 import type { ITicketRepository } from '../../repositories/interfaces/ticket.repository.interface.js';
 import type { IUserRepository } from '../../repositories/interfaces/user.repository.interface.js';
 import type { RepositoryUpdateInput } from '../../repositories/types/repository.types.js';
-import { NotFoundException, ValidationException, ForbiddenException } from '../../exceptions/index.js';
+import { NotFoundException, ValidationException } from '../../exceptions/index.js';
+import type { AuthenticatedUser } from '../../types/auth.types.js';
 import { BaseService } from '../base/base.service.js';
+import type { NotificationService } from '../notification/notification.service.js';
 import type { UpdateTicketInput } from '../types/ticket.service.types.js';
 
 export class TicketUpdateService extends BaseService {
   constructor(
     private readonly ticketRepository: ITicketRepository,
     private readonly userRepository: IUserRepository,
+    private readonly notificationService: NotificationService,
   ) {
     super();
   }
 
-  async updateTicket(ticketNumber: number, input: UpdateTicketInput): Promise<ITicketRecord> {
+  async updateTicket(
+    ticketNumber: number,
+    input: UpdateTicketInput,
+    user: AuthenticatedUser,
+  ): Promise<ITicketRecord> {
     const existingTicket = await this.ticketRepository.findByTicketNumber(ticketNumber);
 
     if (!existingTicket) {
       throw new NotFoundException('Ticket not found');
     }
 
-    if (existingTicket.status === TicketStatus.CLOSED) {
-      throw new ForbiddenException('Closed tickets cannot be edited');
-    }
+    assertCanEditTicket(user, existingTicket);
 
     const updateData: RepositoryUpdateInput<ITicketRecord> = {};
 
@@ -73,6 +78,8 @@ export class TicketUpdateService extends BaseService {
     if (!updatedTicket) {
       throw new NotFoundException('Ticket not found');
     }
+
+    await this.notificationService.notifyTicketUpdated(existingTicket, input, user);
 
     return updatedTicket;
   }

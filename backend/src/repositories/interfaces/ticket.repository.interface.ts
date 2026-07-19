@@ -34,5 +34,5 @@ export interface ITicketRepository {
     options?: Omit<TicketListOptions, 'status'>,
   ): Promise<ITicketRecord[]>;
   countTickets(options?: TicketQueryOptions): Promise<number>;
-  aggregateStatusCounts(): Promise<DashboardStatusCounts>;
+  aggregateStatusCounts(accessibleToUserId?: string | ObjectId): Promise<DashboardStatusCounts>;
 }

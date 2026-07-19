@@ -1,3 +1,4 @@
+export { NotificationController } from './notification/notification.controller.js';
 export { CommentController } from './comment/index.js';
 export { AuthController } from './auth/auth.controller.js';
 export { TicketController } from './ticket/index.js';
