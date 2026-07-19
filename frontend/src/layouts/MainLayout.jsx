@@ -29,7 +29,7 @@ export function MainLayout() {
   };
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
+    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'transparent' }}>
       <AppHeader onMenuClick={handleDrawerToggle} />
       <AppSidebar
         mobileOpen={mobileOpen}

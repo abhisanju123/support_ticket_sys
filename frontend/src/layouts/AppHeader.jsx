@@ -31,6 +31,7 @@ import {
 } from '../constants/layout.constants.js';
 import { ROUTE_PATHS } from '../constants/routes.constants.js';
 import { useAuth } from '../features/auth/hooks/useAuth.js';
+import { getUserInitial } from '../utils/userFormatters.js';
 
 import { AppLogo } from './AppLogo.jsx';
 
@@ -44,6 +45,7 @@ export function AppHeader({ onMenuClick, guest = false }) {
 
   const isGuest = guest || !isAuthenticated;
   const displayName = user?.name ?? 'User';
+  const userInitial = getUserInitial(displayName);
   const isLoginPage = location.pathname === ROUTE_PATHS.LOGIN;
   const isRegisterPage = location.pathname === ROUTE_PATHS.REGISTER;
 
@@ -70,14 +72,14 @@ export function AppHeader({ onMenuClick, guest = false }) {
     <AppBar
       position="fixed"
       elevation={0}
+      className="app-header"
       sx={{
         width: '100%',
         ml: 0,
-        bgcolor: alpha(theme.palette.background.paper, 0.92),
-        backdropFilter: 'blur(10px)',
+        bgcolor: alpha(theme.palette.background.paper, 0.01),
+        backdropFilter: 'blur(12px)',
         color: 'text.primary',
-        borderBottom: 1,
-        borderColor: 'divider',
+        borderBottom: 0,
         boxShadow: 'var(--app-shadow-elevated)',
         zIndex: (appTheme) => appTheme.zIndex.drawer + 1,
       }}
@@ -204,15 +206,20 @@ export function AppHeader({ onMenuClick, guest = false }) {
                 }}
               >
                 <Avatar
+                  className="header-profile-avatar"
+                  alt={displayName}
                   sx={{
                     width: 32,
                     height: 32,
+                    flexShrink: 0,
                     bgcolor: 'primary.main',
-                    fontSize: '0.8125rem',
+                    color: 'primary.contrastText',
+                    fontSize: '0.875rem',
                     fontWeight: 700,
+                    lineHeight: 1,
                   }}
                 >
-                  {displayName.charAt(0).toUpperCase()}
+                  {userInitial}
                 </Avatar>
 
                 <Box sx={{ display: { xs: 'none', sm: 'block' }, textAlign: 'left', ml: 1, mr: 0.25 }}>

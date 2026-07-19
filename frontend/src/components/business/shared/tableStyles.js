@@ -6,7 +6,7 @@ export const TABLE_HEADER_CELL_SX = {
   color: 'text.secondary',
   textTransform: 'uppercase',
   letterSpacing: '0.04em',
-  bgcolor: 'var(--app-color-table-header)',
+  background: 'var(--app-color-table-header)',
   borderBottom: 1,
   borderColor: 'divider',
   py: 1.5,

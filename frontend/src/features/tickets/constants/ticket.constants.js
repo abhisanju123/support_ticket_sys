@@ -65,7 +65,7 @@ export const TICKET_LIST_COLUMNS = [
 ];
 
 /** Tickets in these statuses cannot be edited via the update API or edit form. */
-export const NON_EDITABLE_TICKET_STATUSES = ['closed', 'cancelled'];
+export const NON_EDITABLE_TICKET_STATUSES = ['resolved', 'closed', 'cancelled'];
 
 /**
  * @param {{ status?: string } | null | undefined} ticket

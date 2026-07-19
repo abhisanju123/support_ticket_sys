@@ -84,7 +84,7 @@ export const muiTheme = createTheme({
         error: colors.error,
         info: colors.info,
         background: {
-          default: colors.neutral[50],
+          default: 'transparent',
           paper: '#FFFFFF',
         },
         text: {
@@ -109,7 +109,10 @@ export const muiTheme = createTheme({
         warning: colors.warning,
         error: colors.error,
         info: colors.info,
-        background: colors.dark.background,
+        background: {
+          ...colors.dark.background,
+          default: 'transparent',
+        },
         text: colors.dark.text,
         divider: colors.dark.divider,
       },
@@ -154,11 +157,21 @@ export const muiTheme = createTheme({
             outlineOffset: 2,
           },
         }),
-        contained: () => ({
-          boxShadow: 'none',
+        containedPrimary: () => ({
+          background: 'var(--app-btn-submit-bg)',
+          color: '#ffffff',
+          boxShadow: 'var(--app-btn-submit-shadow)',
+          '&:hover': {
+            background: 'var(--app-btn-submit-bg-hover)',
+            boxShadow: 'var(--app-btn-submit-shadow-hover)',
+          },
+          '&.Mui-disabled': {
+            background: 'var(--app-btn-disabled-bg)',
+            color: 'var(--app-btn-disabled-text)',
+          },
         }),
         outlined: () => ({
-          borderWidth: '1.5px',
+          borderWidth: 0,
         }),
         sizeLarge: {
           padding: '0.625rem 1.375rem',
@@ -187,20 +200,20 @@ export const muiTheme = createTheme({
       styleOverrides: {
         root: ({ theme }) => ({
           borderRadius: shape.borderRadiusLg,
-          backgroundColor:
-            theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.02)' : 'rgba(255, 255, 255, 0.04)',
+          backgroundColor: 'var(--app-color-input-bg)',
           transition:
             'background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease',
           '&:hover': {
-            backgroundColor:
-              theme.palette.mode === 'light' ? '#ffffff' : 'rgba(255, 255, 255, 0.06)',
+            backgroundColor: 'var(--app-color-input-bg-hover)',
           },
           '&:hover .MuiOutlinedInput-notchedOutline': {
             borderColor:
-              theme.palette.mode === 'light' ? colors.neutral[400] : 'rgba(255, 255, 255, 0.28)',
+              theme.palette.mode === 'light'
+                ? 'color-mix(in srgb, var(--app-color-primary) 42%, var(--app-color-border))'
+                : 'rgba(66, 165, 245, 0.4)',
           },
           '&.Mui-focused': {
-            backgroundColor: theme.palette.background.paper,
+            backgroundColor: 'var(--app-color-input-bg-hover)',
             boxShadow:
               theme.palette.mode === 'light'
                 ? '0 0 0 3px rgba(21, 101, 192, 0.12)'
@@ -208,6 +221,7 @@ export const muiTheme = createTheme({
           },
           '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
             borderWidth: '1.5px',
+            borderColor: theme.palette.primary.main,
           },
           '&.Mui-error.Mui-focused': {
             boxShadow:
@@ -218,7 +232,10 @@ export const muiTheme = createTheme({
         }),
         notchedOutline: ({ theme }) => ({
           borderColor:
-            theme.palette.mode === 'light' ? colors.neutral[300] : 'rgba(255, 255, 255, 0.18)',
+            theme.palette.mode === 'light'
+              ? 'color-mix(in srgb, var(--app-color-primary) 28%, var(--app-color-border))'
+              : 'rgba(66, 165, 245, 0.28)',
+          borderWidth: '1.5px',
           transition: 'border-color 0.2s ease',
         }),
         input: {
@@ -238,6 +255,15 @@ export const muiTheme = createTheme({
             fontWeight: typography.fontWeight.semibold,
           },
         }),
+        outlined: {
+          '&.MuiInputLabel-shrink': {
+            padding: '0 6px',
+            marginLeft: '-4px',
+            backgroundColor: 'var(--app-color-input-label-bg)',
+            borderRadius: 2,
+            zIndex: 1,
+          },
+        },
       },
     },
     MuiFormHelperText: {

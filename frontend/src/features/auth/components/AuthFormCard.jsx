@@ -19,7 +19,7 @@ export function AuthFormCard({
       component="form"
       onSubmit={onSubmit}
       noValidate
-      className="surface-card shadow-elevated app-form app-form--auth auth-form-card"
+      className="shadow-elevated app-form app-form--auth auth-form-card"
     >
       <Box className="auth-form-card__header">
         {Icon || badge ? (

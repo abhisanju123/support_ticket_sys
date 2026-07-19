@@ -1,4 +1,4 @@
-import { TERMINAL_TICKET_STATUSES, TicketStatus } from '../enums/ticket-status.enum.js';
+import { NON_EDITABLE_TICKET_STATUSES, TicketStatus } from '../enums/ticket-status.enum.js';
 import { Permission } from '../enums/permission.enum.js';
 import { UserRole } from '../enums/user-role.enum.js';
 import { ForbiddenException, NotFoundException, ValidationException } from '../exceptions/index.js';
@@ -47,8 +47,8 @@ export function assertCanEditTicket(
   user: AuthenticatedUser,
   ticket: TicketAccessFields & { status: TicketStatus },
 ): void {
-  if (TERMINAL_TICKET_STATUSES.includes(ticket.status)) {
-    throw new ForbiddenException('Closed and cancelled tickets cannot be edited');
+  if (NON_EDITABLE_TICKET_STATUSES.includes(ticket.status)) {
+    throw new ForbiddenException('Resolved, closed, and cancelled tickets cannot be edited');
   }
 
   if (user.role === UserRole.EMPLOYEE && resolveAccessUserId(ticket.createdBy) !== user.id) {

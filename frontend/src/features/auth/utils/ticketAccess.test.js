@@ -41,6 +41,8 @@ describe('frontend permissions', () => {
     expect(canEditTicket(employee, ownOpenTicket)).toBe(true);
     expect(canEditTicket(employee, foreignTicket)).toBe(false);
     expect(canEditTicket(admin, foreignTicket)).toBe(true);
+    expect(canEditTicket(admin, { ...ownOpenTicket, status: 'resolved' })).toBe(false);
+    expect(canEditTicket(admin, { ...ownOpenTicket, status: 'closed' })).toBe(false);
   });
 
   it('exposes action helpers by role', () => {

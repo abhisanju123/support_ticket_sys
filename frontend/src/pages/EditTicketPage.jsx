@@ -52,11 +52,11 @@ export function EditTicketPage() {
       <PageContainer>
         <PageHeader
           title="Edit Ticket"
-          description="Closed and cancelled tickets are read-only and cannot be modified."
+          description="Resolved, closed, and cancelled tickets are read-only and cannot be modified."
         />
         <EmptyState
           title="This ticket cannot be edited"
-          description="You do not have permission to edit this ticket, or it is closed or cancelled."
+          description="You do not have permission to edit this ticket, or it is resolved, closed, or cancelled."
           action={
             <Button
               variant="contained"

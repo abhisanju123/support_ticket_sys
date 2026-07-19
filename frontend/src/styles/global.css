@@ -15,7 +15,8 @@ html {
 
 body {
   min-height: 100vh;
-  background-color: var(--app-color-surface);
+  background: var(--app-color-canvas-bg);
+  background-attachment: fixed;
   color: var(--app-color-text-primary);
 }
 

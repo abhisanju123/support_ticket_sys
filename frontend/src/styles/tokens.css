@@ -51,8 +51,8 @@
   --app-radius-panel: 0.625rem;
 
   /* Table surfaces */
-  --app-color-table-header: #fafafa;
-  --app-color-table-row-alt: #fafafa;
+  --app-color-table-header: linear-gradient(180deg, #f3f8ff 0%, #eceff8 100%);
+  --app-color-table-row-alt: rgba(227, 242, 253, 0.35);
 
   /* Elevation */
   --app-shadow-elevated:
@@ -93,9 +93,73 @@
   --app-color-text-secondary: #757575;
   --app-color-focus-ring: rgba(21, 101, 192, 0.35);
 
-  /* Buttons */
-  --app-btn-submit-bg: linear-gradient(135deg, #1976d2 0%, #1565c0 52%, #0d47a1 100%);
-  --app-btn-submit-bg-hover: linear-gradient(135deg, #42a5f5 0%, #1e88e5 48%, #1565c0 100%);
+  /* Unified gradients — brand, borders, canvas, blocks */
+  --app-gradient-brand: linear-gradient(135deg, #42a5f5 0%, #1565c0 48%, #6a1b9a 100%);
+  --app-gradient-brand-hover: linear-gradient(135deg, #64b5f6 0%, #1e88e5 45%, #7b1fa2 100%);
+  --app-gradient-brand-soft: linear-gradient(135deg, rgba(21, 101, 192, 0.14) 0%, rgba(66, 165, 245, 0.1) 55%, rgba(106, 27, 154, 0.08) 100%);
+  --app-gradient-border: linear-gradient(
+    135deg,
+    rgba(21, 101, 192, 0.34) 0%,
+    rgba(66, 165, 245, 0.26) 48%,
+    rgba(106, 27, 154, 0.2) 100%
+  );
+  --app-gradient-border-hover: linear-gradient(
+    135deg,
+    rgba(21, 101, 192, 0.52) 0%,
+    rgba(66, 165, 245, 0.42) 50%,
+    rgba(106, 27, 154, 0.34) 100%
+  );
+  --app-gradient-border-accent: linear-gradient(135deg, #1565c0 0%, #42a5f5 50%, #6a1b9a 100%);
+  --app-gradient-top-accent: linear-gradient(
+    90deg,
+    var(--app-color-primary) 0%,
+    var(--app-color-primary-light) 55%,
+    var(--app-color-secondary-light) 100%
+  );
+  --app-color-canvas-bg:
+    radial-gradient(ellipse 80% 55% at 8% 0%, rgba(33, 150, 243, 0.24), transparent 58%),
+    radial-gradient(ellipse 70% 50% at 92% 8%, rgba(156, 39, 176, 0.2), transparent 52%),
+    radial-gradient(ellipse 65% 45% at 50% 100%, rgba(0, 188, 212, 0.16), transparent 55%),
+    radial-gradient(ellipse 50% 40% at 70% 60%, rgba(255, 64, 129, 0.08), transparent 50%),
+    linear-gradient(
+      155deg,
+      #e3f2fd 0%,
+      #ede7f6 28%,
+      #e0f7fa 52%,
+      #fce4ec 78%,
+      #e8eaf6 100%
+    );
+  --app-color-panel-bg: linear-gradient(
+    135deg,
+    #ffffff 0%,
+    #e8f4fd 38%,
+    #f3e5f5 72%,
+    #ffffff 100%
+  );
+  --app-color-block-bg: linear-gradient(
+    145deg,
+    #ffffff 0%,
+    #f1f8ff 45%,
+    #f8f0ff 100%
+  );
+  --app-color-block-bg-muted: linear-gradient(
+    145deg,
+    #e8f4fd 0%,
+    #ede7f6 48%,
+    #e0f2f1 100%
+  );
+  --app-color-header-bg: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.94) 0%,
+    rgba(232, 244, 253, 0.9) 45%,
+    rgba(243, 229, 245, 0.88) 100%
+  );
+
+  --app-color-input-bg: #ffffff;
+  --app-color-input-bg-hover: #ffffff;
+  --app-color-input-label-bg: #ffffff;
+  --app-btn-submit-bg: var(--app-gradient-brand);
+  --app-btn-submit-bg-hover: var(--app-gradient-brand-hover);
   --app-btn-submit-shadow: 0 4px 14px rgba(21, 101, 192, 0.28);
   --app-btn-submit-shadow-hover: 0 8px 22px rgba(21, 101, 192, 0.38);
   --app-btn-cancel-border: #cfd8dc;
@@ -108,7 +172,7 @@
   --app-btn-disabled-text: #757575;
 
   /* Sidebar */
-  --app-color-sidebar-bg: #f8fafc;
+  --app-color-sidebar-bg: linear-gradient(180deg, #eef6ff 0%, #f3ecff 100%);
   --app-color-sidebar-active-bg: rgba(21, 101, 192, 0.1);
   --app-color-sidebar-active-border: #1565c0;
   --app-color-sidebar-hover-bg: rgba(21, 101, 192, 0.06);
@@ -124,13 +188,80 @@
   --app-color-text-primary: #ffffff;
   --app-color-text-secondary: #b0b0b0;
   --app-color-focus-ring: rgba(66, 165, 245, 0.4);
-  --app-color-table-header: rgba(255, 255, 255, 0.04);
-  --app-color-table-row-alt: rgba(255, 255, 255, 0.02);
+  --app-color-table-header: linear-gradient(180deg, rgba(66, 165, 245, 0.1) 0%, rgba(156, 39, 176, 0.08) 100%);
+  --app-color-table-row-alt: rgba(66, 165, 245, 0.04);
   --app-shadow-elevated:
     0 1px 2px rgba(0, 0, 0, 0.2),
     0 4px 12px rgba(0, 0, 0, 0.24);
-  --app-btn-submit-bg: linear-gradient(135deg, #42a5f5 0%, #1e88e5 52%, #1565c0 100%);
-  --app-btn-submit-bg-hover: linear-gradient(135deg, #64b5f6 0%, #42a5f5 48%, #1e88e5 100%);
+  --app-gradient-brand: linear-gradient(135deg, #64b5f6 0%, #1e88e5 48%, #7b1fa2 100%);
+  --app-gradient-brand-hover: linear-gradient(135deg, #90caf9 0%, #42a5f5 45%, #9c4dcc 100%);
+  --app-gradient-brand-soft: linear-gradient(
+    135deg,
+    rgba(66, 165, 245, 0.16) 0%,
+    rgba(30, 136, 229, 0.12) 55%,
+    rgba(156, 39, 176, 0.1) 100%
+  );
+  --app-gradient-border: linear-gradient(
+    135deg,
+    rgba(66, 165, 245, 0.38) 0%,
+    rgba(30, 136, 229, 0.28) 48%,
+    rgba(156, 39, 176, 0.22) 100%
+  );
+  --app-gradient-border-hover: linear-gradient(
+    135deg,
+    rgba(100, 181, 246, 0.55) 0%,
+    rgba(66, 165, 245, 0.45) 50%,
+    rgba(186, 104, 200, 0.36) 100%
+  );
+  --app-gradient-border-accent: linear-gradient(135deg, #42a5f5 0%, #1e88e5 50%, #9c4dcc 100%);
+  --app-gradient-top-accent: linear-gradient(
+    90deg,
+    var(--app-color-primary-light) 0%,
+    #64b5f6 55%,
+    var(--app-color-secondary-light) 100%
+  );
+  --app-color-canvas-bg:
+    radial-gradient(ellipse 80% 55% at 8% 0%, rgba(66, 165, 245, 0.2), transparent 58%),
+    radial-gradient(ellipse 70% 50% at 92% 8%, rgba(186, 104, 200, 0.16), transparent 52%),
+    radial-gradient(ellipse 65% 45% at 50% 100%, rgba(0, 188, 212, 0.12), transparent 55%),
+    linear-gradient(
+      155deg,
+      #0d1117 0%,
+      #121a2e 24%,
+      #1a1528 48%,
+      #101820 72%,
+      #0f1419 100%
+    );
+  --app-color-panel-bg: linear-gradient(
+    135deg,
+    #1e2433 0%,
+    #1a2740 42%,
+    #241a30 78%,
+    #1c1f2b 100%
+  );
+  --app-color-block-bg: linear-gradient(
+    145deg,
+    #1e1e1e 0%,
+    #1a2235 50%,
+    #221a2a 100%
+  );
+  --app-color-block-bg-muted: linear-gradient(
+    145deg,
+    #1a2230 0%,
+    #1e1a2a 50%,
+    #172028 100%
+  );
+  --app-color-header-bg: linear-gradient(
+    135deg,
+    rgba(30, 36, 51, 0.94) 0%,
+    rgba(26, 39, 64, 0.92) 45%,
+    rgba(36, 26, 48, 0.9) 100%
+  );
+  --app-color-input-bg: #1e2430;
+  --app-color-input-bg-hover: #242b38;
+  --app-color-input-label-bg: #1e2430;
+  --app-btn-submit-bg: var(--app-gradient-brand);
+  --app-btn-submit-bg-hover: var(--app-gradient-brand-hover);
   --app-btn-submit-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
   --app-btn-submit-shadow-hover: 0 8px 24px rgba(66, 165, 245, 0.35);
   --app-btn-cancel-border: rgba(255, 255, 255, 0.22);
@@ -141,7 +272,7 @@
   --app-btn-cancel-text-hover: #90caf9;
   --app-btn-disabled-bg: rgba(255, 255, 255, 0.12);
   --app-btn-disabled-text: rgba(255, 255, 255, 0.38);
-  --app-color-sidebar-bg: #171717;
+  --app-color-sidebar-bg: linear-gradient(180deg, #151b28 0%, #1a1524 100%);
   --app-color-sidebar-active-bg: rgba(66, 165, 245, 0.16);
   --app-color-sidebar-active-border: #42a5f5;
   --app-color-sidebar-hover-bg: rgba(255, 255, 255, 0.06);

@@ -65,6 +65,9 @@ describe('ticket-access', () => {
     expect(() => assertCanEditTicket(employeeUser, ownTicket)).not.toThrow();
     expect(() => assertCanEditTicket(employeeUser, assignedTicket)).toThrow(ForbiddenException);
     expect(() =>
+      assertCanEditTicket(employeeUser, { ...ownTicket, status: TicketStatus.RESOLVED }),
+    ).toThrow(ForbiddenException);
+    expect(() =>
       assertCanEditTicket(employeeUser, { ...ownTicket, status: TicketStatus.CLOSED }),
     ).toThrow(ForbiddenException);
     expect(() =>

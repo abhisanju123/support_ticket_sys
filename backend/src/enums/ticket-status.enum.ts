@@ -36,3 +36,10 @@ export const TERMINAL_TICKET_STATUSES: TicketStatus[] = [
   TicketStatus.CLOSED,
   TicketStatus.CANCELLED,
 ];
+
+/** Tickets in these statuses cannot be updated via PUT /tickets/:id */
+export const NON_EDITABLE_TICKET_STATUSES: TicketStatus[] = [
+  TicketStatus.RESOLVED,
+  TicketStatus.CLOSED,
+  TicketStatus.CANCELLED,
+];
