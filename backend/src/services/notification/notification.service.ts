@@ -28,8 +28,13 @@ export class NotificationService extends BaseService {
   async listForUser(user: AuthenticatedUser): Promise<NotificationResponse[]> {
     const notifications = await this.notificationRepository.findByRecipient(user.id, {
       unreadOnly: true,
+      limit: 10,
     });
     return notifications.map((notification) => this.toResponse(notification));
+  }
+
+  async getUnreadCount(user: AuthenticatedUser): Promise<number> {
+    return this.notificationRepository.countUnread(user.id);
   }
 
   async markAsRead(notificationId: string, user: AuthenticatedUser): Promise<void> {

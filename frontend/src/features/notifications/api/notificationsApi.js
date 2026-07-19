@@ -1,18 +1,36 @@
 import { apiSlice } from '../../../api/baseApi.js';
+import { selectCurrentUser } from '../../auth/store/authSlice.js';
 import { unwrapApiResponse } from '../../../utils/apiTransform.js';
 
 import {
   NOTIFICATIONS_TAG,
-  notificationInvalidationTags,
+  notificationCountInvalidationTags,
+  notificationsCountTag,
   notificationsListTag,
 } from './notificationTags.js';
 
 const NOTIFICATIONS_CACHE_SECONDS = 120;
+const UNREAD_COUNT_POLL_MS = 60_000;
+
+/** RTK Query cache scope — user id is not sent to the API, only separates per-user cache entries. */
+function getNotificationCacheScope(getState) {
+  return selectCurrentUser(getState())?._id;
+}
 
 export const notificationsApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    getUnreadNotificationCount: builder.query({
+      query: (_userId) => '/notifications/unread-count',
+      transformResponse: (response) => {
+        const data = unwrapApiResponse(response);
+        return typeof data?.count === 'number' ? data.count : 0;
+      },
+      providesTags: [notificationsCountTag()],
+      keepUnusedDataFor: NOTIFICATIONS_CACHE_SECONDS,
+    }),
+
     getNotifications: builder.query({
-      query: () => '/notifications',
+      query: (_userId) => '/notifications',
       transformResponse: unwrapApiResponse,
       providesTags: [notificationsListTag()],
       keepUnusedDataFor: NOTIFICATIONS_CACHE_SECONDS,
@@ -24,7 +42,41 @@ export const notificationsApi = apiSlice.injectEndpoints({
         method: 'PATCH',
       }),
       transformResponse: unwrapApiResponse,
-      invalidatesTags: notificationInvalidationTags(),
+      async onQueryStarted(id, { dispatch, queryFulfilled, getState }) {
+        const scope = getNotificationCacheScope(getState);
+
+        if (!scope) {
+          return;
+        }
+
+        const patchList = dispatch(
+          notificationsApi.util.updateQueryData('getNotifications', scope, (draft) => {
+            if (!Array.isArray(draft)) {
+              return;
+            }
+
+            const index = draft.findIndex((item) => item._id === id);
+
+            if (index >= 0) {
+              draft.splice(index, 1);
+            }
+          }),
+        );
+
+        const patchCount = dispatch(
+          notificationsApi.util.updateQueryData('getUnreadNotificationCount', scope, (count) =>
+            Math.max(0, (count ?? 0) - 1),
+          ),
+        );
+
+        try {
+          await queryFulfilled;
+        } catch {
+          patchList.undo();
+          patchCount.undo();
+        }
+      },
+      invalidatesTags: notificationCountInvalidationTags(),
     }),
 
     markAllNotificationsRead: builder.mutation({
@@ -33,28 +85,70 @@ export const notificationsApi = apiSlice.injectEndpoints({
         method: 'PATCH',
       }),
       transformResponse: unwrapApiResponse,
-      invalidatesTags: notificationInvalidationTags(),
+      async onQueryStarted(_arg, { dispatch, queryFulfilled, getState }) {
+        const scope = getNotificationCacheScope(getState);
+
+        if (!scope) {
+          return;
+        }
+
+        const patchList = dispatch(
+          notificationsApi.util.updateQueryData('getNotifications', scope, () => []),
+        );
+
+        const patchCount = dispatch(
+          notificationsApi.util.updateQueryData('getUnreadNotificationCount', scope, () => 0),
+        );
+
+        try {
+          await queryFulfilled;
+        } catch {
+          patchList.undo();
+          patchCount.undo();
+        }
+      },
+      invalidatesTags: notificationCountInvalidationTags(),
     }),
   }),
 });
 
 export const {
   useGetNotificationsQuery,
-  useMarkNotificationReadMutation,
+  useGetUnreadNotificationCountQuery,
   useMarkAllNotificationsReadMutation,
+  useMarkNotificationReadMutation,
 } = notificationsApi;
 
-export { NOTIFICATIONS_TAG };
+export { NOTIFICATIONS_CACHE_SECONDS, NOTIFICATIONS_TAG, UNREAD_COUNT_POLL_MS };
 
 /**
- * Cached notifications — reuses store data instead of refetching on every mount/focus.
- * @param {Parameters<typeof useGetNotificationsQuery>[1]} [options]
+ * Lightweight unread badge query with infrequent background refresh.
+ * @param {string | undefined} userId
+ * @param {Parameters<typeof useGetUnreadNotificationCountQuery>[1]} [options]
  */
-export function useCachedNotificationsQuery(options = {}) {
-  return useGetNotificationsQuery(undefined, {
+export function useUnreadNotificationCountQuery(userId, options = {}) {
+  return useGetUnreadNotificationCountQuery(userId, {
+    skip: !userId,
     refetchOnFocus: false,
     refetchOnReconnect: true,
-    refetchOnMountOrArgChange: false,
+    refetchOnMountOrArgChange: true,
+    pollingInterval: UNREAD_COUNT_POLL_MS,
+    ...options,
+  });
+}
+
+/**
+ * Full notification list — fetch only when the bell menu is opened.
+ * @param {string | undefined} userId
+ * @param {boolean} enabled
+ * @param {Parameters<typeof useGetNotificationsQuery>[1]} [options]
+ */
+export function useNotificationListQuery(userId, enabled = false, options = {}) {
+  return useGetNotificationsQuery(userId, {
+    skip: !userId || !enabled,
+    refetchOnFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMountOrArgChange: true,
     ...options,
   });
 }

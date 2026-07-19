@@ -1,11 +1,19 @@
 import { createListenerMiddleware, isRejectedWithValue } from '@reduxjs/toolkit';
 
+import { baseApi } from '../api/baseApi.js';
 import { clearCredentials } from '../features/auth/store/authSlice.js';
 import { API_ERROR_CODES, getApiErrorNotificationMessage, getValidationFieldErrors, parseApiError } from '../utils/apiError.js';
 
 import { showNotification } from './notification/notificationSlice.js';
 
 export const apiListenerMiddleware = createListenerMiddleware();
+
+apiListenerMiddleware.startListening({
+  actionCreator: clearCredentials,
+  effect: (_action, listenerApi) => {
+    listenerApi.dispatch(baseApi.util.resetApiState());
+  },
+});
 
 apiListenerMiddleware.startListening({
   matcher: isRejectedWithValue,

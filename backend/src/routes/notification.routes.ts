@@ -7,6 +7,7 @@ import { notificationIdParamSchema } from '../schemas/request/notification.reque
 export const createNotificationRouter = (notificationController: NotificationController): Router => {
   const router = Router();
 
+  router.get('/unread-count', notificationController.getUnreadCount);
   router.get('/', notificationController.listNotifications);
   router.patch('/read-all', notificationController.markAllNotificationsRead);
   router.patch(

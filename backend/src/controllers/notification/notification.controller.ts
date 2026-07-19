@@ -14,6 +14,13 @@ export class NotificationController {
     ApiResponse.success(res, notifications, 'Notifications retrieved successfully');
   });
 
+  getUnreadCount = asyncHandler(async (req: Request, res: Response) => {
+    const user = getAuthenticatedUser(req);
+    const count = await this.notificationService.getUnreadCount(user);
+
+    ApiResponse.success(res, { count }, 'Unread notification count retrieved successfully');
+  });
+
   markNotificationRead = asyncHandler(async (req: Request, res: Response) => {
     const user = getAuthenticatedUser(req);
     await this.notificationService.markAsRead(String(req.params.id), user);

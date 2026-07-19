@@ -44,5 +44,6 @@ export const ticketUpdateInvalidationTags = (id) => [
   TICKET_LIST_TAG,
   ticketDetailTag(id),
   DASHBOARD_STATS_TAG,
+  { type: 'Notification', id: 'COUNT' },
   { type: 'Notification', id: 'LIST' },
 ];

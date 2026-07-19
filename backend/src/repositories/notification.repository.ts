@@ -10,7 +10,7 @@ import type {
   NotificationListOptions,
 } from './types/notification.repository.types.js';
 
-const DEFAULT_LIST_LIMIT = 30;
+const DEFAULT_LIST_LIMIT = 10;
 
 export class NotificationRepository
   extends BaseRepository<INotificationRecord>

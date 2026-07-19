@@ -86,14 +86,14 @@ export const INDEX_DEFINITIONS: Record<string, IndexDefinition[]> = {
   ],
   [COLLECTIONS.NOTIFICATIONS]: [
     {
+      keys: { recipientId: 1, read: 1, createdAt: -1 },
+      options: { name: 'notifications_recipientId_read_createdAt' },
+      reason: 'Fast unread notification list and count per user.',
+    },
+    {
       keys: { recipientId: 1, createdAt: -1 },
       options: { name: 'notifications_recipientId_createdAt' },
       reason: 'List a user bell notifications newest first.',
-    },
-    {
-      keys: { recipientId: 1, read: 1 },
-      options: { name: 'notifications_recipientId_read' },
-      reason: 'Count and filter unread notifications per user.',
     },
   ],
 };

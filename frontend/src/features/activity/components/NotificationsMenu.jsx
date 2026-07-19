@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
@@ -16,11 +16,13 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 
 import { buildTicketDetailsPath } from '../../../constants/routes.constants.js';
+import { useAuth } from '../../auth/hooks/useAuth.js';
 import { formatRelativeTime } from '../../tickets/utils/ticketFormatters.js';
 import {
-  useCachedNotificationsQuery,
   useMarkAllNotificationsReadMutation,
   useMarkNotificationReadMutation,
+  useNotificationListQuery,
+  useUnreadNotificationCountQuery,
 } from '../../notifications/index.js';
 
 const TYPE_ICONS = {
@@ -31,19 +33,29 @@ const TYPE_ICONS = {
 
 export function NotificationsMenu() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const userId = user?._id;
   const [anchorEl, setAnchorEl] = useState(null);
-  const { data: items = [], isLoading, refetch } = useCachedNotificationsQuery({
-    pollingInterval: anchorEl ? 30_000 : 0,
-  });
+  const isMenuOpen = Boolean(anchorEl);
+
+  const { data: unreadCount = 0 } = useUnreadNotificationCountQuery(userId);
+  const {
+    data: items = [],
+    isLoading,
+    isFetching,
+    refetch,
+  } = useNotificationListQuery(userId, isMenuOpen);
   const [markNotificationRead] = useMarkNotificationReadMutation();
   const [markAllNotificationsRead] = useMarkAllNotificationsReadMutation();
 
-  const unreadItems = useMemo(() => items.filter((item) => !item.read), [items]);
-  const unreadCount = unreadItems.length;
+  useEffect(() => {
+    if (isMenuOpen) {
+      refetch();
+    }
+  }, [isMenuOpen, refetch]);
 
   const handleOpen = (event) => {
     setAnchorEl(event.currentTarget);
-    refetch();
   };
 
   const handleClose = () => {
@@ -51,8 +63,12 @@ export function NotificationsMenu() {
   };
 
   const handleSelect = async (item) => {
-    if (!item.read) {
-      await markNotificationRead(item._id);
+    try {
+      if (!item.read) {
+        await markNotificationRead(item._id).unwrap();
+      }
+    } catch {
+      // Navigation still allowed; count will refresh on next poll.
     }
 
     handleClose();
@@ -60,20 +76,26 @@ export function NotificationsMenu() {
   };
 
   const handleMarkAllRead = async () => {
-    await markAllNotificationsRead();
+    try {
+      await markAllNotificationsRead().unwrap();
+    } catch {
+      // Optimistic update rolls back on failure.
+    }
   };
+
+  const showLoading = isMenuOpen && (isLoading || (isFetching && items.length === 0));
 
   return (
     <>
       <IconButton aria-label="notifications" onClick={handleOpen} color="inherit" className="header-action-btn">
-        <Badge badgeContent={unreadCount} color="error" max={9}>
+        <Badge badgeContent={unreadCount} color="error" max={9} invisible={unreadCount === 0}>
           <NotificationsNoneOutlinedIcon />
         </Badge>
       </IconButton>
 
       <Menu
         anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
+        open={isMenuOpen}
         onClose={handleClose}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -99,16 +121,16 @@ export function NotificationsMenu() {
 
         <Divider />
 
-        {isLoading ? (
+        {showLoading ? (
           <Typography variant="body2" color="text.secondary" sx={{ px: 2, py: 2 }}>
             Loading notifications...
           </Typography>
-        ) : unreadItems.length === 0 ? (
+        ) : items.length === 0 ? (
           <Typography variant="body2" color="text.secondary" sx={{ px: 2, py: 2 }}>
             You&apos;re all caught up. New activity will appear here.
           </Typography>
         ) : (
-          unreadItems.slice(0, 10).map((item) => {
+          items.map((item) => {
             const Icon = TYPE_ICONS[item.type] ?? NotificationsNoneOutlinedIcon;
 
             return (
