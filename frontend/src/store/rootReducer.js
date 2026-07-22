@@ -3,7 +3,6 @@ import { combineReducers } from '@reduxjs/toolkit';
 import { baseApi } from '../api/baseApi.js';
 import { authReducer } from '../features/auth/store/authSlice.js';
 import { commandPaletteReducer } from '../features/command-palette/store/commandPaletteSlice.js';
-import { commentsUiReducer } from '../features/comments/store/commentsUiSlice.js';
 import { dashboardUiReducer } from '../features/dashboard/store/dashboardUiSlice.js';
 import { ticketsUiReducer } from '../features/tickets/store/ticketsUiSlice.js';
 
@@ -22,6 +21,5 @@ export const rootReducer = combineReducers({
   commandPalette: commandPaletteReducer,
   ticketsUi: ticketsUiReducer,
   dashboardUi: dashboardUiReducer,
-  commentsUi: commentsUiReducer,
   notification: notificationReducer,
 });

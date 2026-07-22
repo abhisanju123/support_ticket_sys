@@ -11,10 +11,10 @@ import {
 import { EmptyTicketsIllustration, NotFoundState } from '../components/common';
 import { ROUTE_PATHS } from '../constants';
 import { usePermissions } from '../features/auth/hooks/usePermissions.js';
-import { useGetCommentsQuery, useCreateCommentMutation, useUpdateCommentMutation, useDeleteCommentMutation } from '../features/comments';
+import { useGetCommentsQuery, useCreateCommentMutation, useUpdateCommentMutation, useDeleteCommentMutation } from '../features/comments/api/commentsApi.js';
 import { useCachedUsersQuery } from '../features/users/api/usersApi.js';
 import { TicketActivityTimeline } from '../features/tickets/components/TicketActivityTimeline.jsx';
-import { TicketCommentsSection } from '../features/tickets/components/TicketCommentsSection.jsx';
+import { TicketCommentsSection } from '../components/business/comments/Comments.jsx';
 import { TicketDetailsInfo } from '../features/tickets/components/TicketDetailsInfo.jsx';
 import { TicketStatusControl } from '../features/tickets/components/TicketStatusControl.jsx';
 import {

@@ -16,6 +16,7 @@ import type { AuthenticatedUser } from '../../types/auth.types.js';
 
 const employeeId = '507f1f77bcf86cd799439011';
 const otherUserId = '507f1f77bcf86cd799439012';
+const thirdUserId = '507f1f77bcf86cd799439013';
 
 const employeeUser: AuthenticatedUser = {
   id: employeeId,
@@ -100,7 +101,7 @@ describe('ticket-access', () => {
 
   it('allows only comment authors to delete comments', () => {
     const ownComment = { createdBy: new Types.ObjectId(employeeId) };
-    const foreignComment = { createdBy: new Types.ObjectId(otherUserId) };
+    const foreignComment = { createdBy: new Types.ObjectId(thirdUserId) };
 
     expect(() => assertCanDeleteComment(employeeUser, ownComment)).not.toThrow();
     expect(() => assertCanDeleteComment(employeeUser, foreignComment)).toThrow(ForbiddenException);

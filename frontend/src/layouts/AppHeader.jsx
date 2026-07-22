@@ -21,7 +21,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { alpha, useTheme } from '@mui/material/styles';
 import { useNavigate, Link as RouterLink, useLocation } from 'react-router-dom';
 
-import { NotificationsMenu } from '../features/activity/index.js';
+import { NotificationsMenu } from '../features/notifications/index.js';
 import { CommandPaletteTrigger } from '../features/command-palette/components/CommandPaletteTrigger.jsx';
 import {
   HEADER_LOGO_SIZE,

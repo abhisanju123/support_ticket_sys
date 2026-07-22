@@ -9,9 +9,20 @@ import {
   getValidatedQuery,
 } from '../../helpers/index.js';
 import { asyncHandler } from '../../middlewares/index.js';
+import type { CommentListOptions } from '../../repositories/types/comment.repository.types.js';
 import type { CommentService } from '../../services/comment/comment.service.js';
-import type { CreateCommentInput } from '../../services/types/index.js';
-import type { CommentListQueryParams, CreateCommentBody, UpdateCommentBody } from '../types/comment.controller.types.js';
+import type { CreateCommentInput } from '../../services/comment/comment.service.js';
+
+export interface CreateCommentBody {
+  message: string;
+  createdBy: string;
+}
+
+export interface UpdateCommentBody {
+  message: string;
+}
+
+export type CommentListQueryParams = CommentListOptions;
 
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}

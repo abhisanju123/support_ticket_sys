@@ -3,6 +3,9 @@ export {
   DESCRIPTION_MAX_LENGTH,
   TITLE_MAX_LENGTH,
   commentMessageSchema,
+  createCommentFormSchema,
+  editCommentFormSchema,
+  addCommentFormSchema,
   optionalUserFromListSchema,
   requiredTicketPrioritySchema,
   requiredUserFromListSchema,
@@ -10,12 +13,6 @@ export {
   ticketPrioritySchema,
   ticketTitleSchema,
 } from './common.schema.js';
-
-export {
-  addCommentFormSchema,
-  createCommentFormSchema,
-  editCommentFormSchema,
-} from './commentForm.schema.js';
 
 export {
   createCreateTicketFormSchema,

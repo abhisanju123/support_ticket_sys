@@ -2,12 +2,18 @@ import { apiSlice } from '../../../api/baseApi.js';
 import { selectCurrentUser } from '../../auth/store/authSlice.js';
 import { unwrapApiResponse } from '../../../utils/apiTransform.js';
 
-import {
-  NOTIFICATIONS_TAG,
-  notificationCountInvalidationTags,
-  notificationsCountTag,
-  notificationsListTag,
-} from './notificationTags.js';
+export const NOTIFICATIONS_TAG = 'Notification';
+
+export const notificationsListTag = () => ({ type: NOTIFICATIONS_TAG, id: 'LIST' });
+
+export const notificationsCountTag = () => ({ type: NOTIFICATIONS_TAG, id: 'COUNT' });
+
+export const notificationInvalidationTags = () => [
+  notificationsListTag(),
+  notificationsCountTag(),
+];
+
+export const notificationCountInvalidationTags = () => [notificationsCountTag()];
 
 const NOTIFICATIONS_CACHE_SECONDS = 120;
 const UNREAD_COUNT_POLL_MS = 60_000;
@@ -119,7 +125,7 @@ export const {
   useMarkNotificationReadMutation,
 } = notificationsApi;
 
-export { NOTIFICATIONS_CACHE_SECONDS, NOTIFICATIONS_TAG, UNREAD_COUNT_POLL_MS };
+export { NOTIFICATIONS_CACHE_SECONDS, UNREAD_COUNT_POLL_MS };
 
 /**
  * Lightweight unread badge query with infrequent background refresh.

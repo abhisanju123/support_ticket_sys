@@ -87,3 +87,19 @@ export const optionalUserFromListSchema = (validUserIds = []) => {
     message: 'Select a user from the system',
   });
 };
+
+/**
+ * @param {string[]} [validUserIds]
+ */
+export const createCommentFormSchema = (validUserIds = []) =>
+  z.object({
+    message: commentMessageSchema,
+    createdBy: requiredUserFromListSchema(validUserIds, 'Please select comment author'),
+  });
+
+export const editCommentFormSchema = z.object({
+  message: commentMessageSchema,
+});
+
+/** @deprecated Use createCommentFormSchema */
+export const addCommentFormSchema = createCommentFormSchema();

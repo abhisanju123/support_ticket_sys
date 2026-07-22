@@ -1,6 +1,10 @@
 export { EmptyState } from './EmptyState.jsx';
 export { ErrorState } from './ErrorState.jsx';
-export * from './illustrations/index.js';
 export { Loader } from './Loader.jsx';
 export { NoResultsState } from './NoResultsState.jsx';
 export { NotFoundState } from './NotFoundState.jsx';
+export { CommentsEmptyIllustration } from './illustrations/CommentsEmptyIllustration.jsx';
+export { EmptyTicketsIllustration } from './illustrations/EmptyTicketsIllustration.jsx';
+export { ErrorIllustration } from './illustrations/ErrorIllustration.jsx';
+export { NotFoundIllustration } from './illustrations/NotFoundIllustration.jsx';
+export { SearchIllustration } from './illustrations/SearchIllustration.jsx';

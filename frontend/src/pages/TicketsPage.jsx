@@ -19,7 +19,8 @@ import { usePermissions } from '../features/auth/hooks/usePermissions.js';
 import { useAppDispatch } from '../hooks';
 import { showNotification } from '../store/notification/notificationSlice.js';
 import { getApiErrorMessage, getApiErrorNotificationMessage } from '../utils';
-import { TicketListTable, TicketListToolbar } from '../features/tickets/components';
+import { TicketListTable } from '../features/tickets/components/TicketListTable.jsx';
+import { TicketToolbar } from '../components/business/tickets/list/TicketToolbar.jsx';
 import {
   TICKET_FILTER_STATUSES,
   TICKET_STATUS_LABELS,
@@ -147,7 +148,7 @@ export function TicketsPage() {
       />
 
       <Panel className="stack-spacing">
-        <TicketListToolbar
+        <TicketToolbar
           embedded
           searchValue={searchInput}
           onSearchChange={(event) => setSearchInput(event.target.value)}

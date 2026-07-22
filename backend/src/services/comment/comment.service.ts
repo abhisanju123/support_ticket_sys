@@ -5,6 +5,7 @@ import {
   assertTicketVisible,
 } from '../../authorization/ticket-access.js';
 import type { ICommentRecord } from '../../interfaces/comment.interface.js';
+import type { ObjectId } from '../../types/domain.types.js';
 import type { ICommentRepository } from '../../repositories/interfaces/comment.repository.interface.js';
 import type { ITicketRepository } from '../../repositories/interfaces/ticket.repository.interface.js';
 import type { IUserRepository } from '../../repositories/interfaces/user.repository.interface.js';
@@ -16,7 +17,23 @@ import { NotFoundException, ValidationException } from '../../exceptions/index.j
 import type { AuthenticatedUser } from '../../types/auth.types.js';
 import { BaseService } from '../base/base.service.js';
 import type { NotificationService } from '../notification/notification.service.js';
-import type { CreateCommentInput, DeleteCommentInput, UpdateCommentInput } from '../types/comment.service.types.js';
+
+export interface CreateCommentInput {
+  ticketNumber: number;
+  message: string;
+  createdBy: string | ObjectId;
+}
+
+export interface UpdateCommentInput {
+  ticketNumber: number;
+  commentId: string;
+  message: string;
+}
+
+export interface DeleteCommentInput {
+  ticketNumber: number;
+  commentId: string;
+}
 
 export class CommentService extends BaseService {
   constructor(

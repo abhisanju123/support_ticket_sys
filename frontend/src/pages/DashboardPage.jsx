@@ -13,7 +13,7 @@ import {
   DashboardInsights,
   DashboardQuickActions,
   DashboardRecentTickets,
-} from '../features/dashboard/components';
+} from '../features/dashboard';
 import { DASHBOARD_STAT_CARDS } from '../features/dashboard/constants/dashboardStats.constants.js';
 import { useDashboardStats, useDashboardTickets } from '../features/dashboard';
 import { buildStatusBreakdown } from '../features/dashboard/utils/dashboardChartData.js';

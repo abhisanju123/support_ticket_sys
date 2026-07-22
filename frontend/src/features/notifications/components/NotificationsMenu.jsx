@@ -23,7 +23,7 @@ import {
   useMarkNotificationReadMutation,
   useNotificationListQuery,
   useUnreadNotificationCountQuery,
-} from '../../notifications/index.js';
+} from '../api/notificationsApi.js';
 
 const TYPE_ICONS = {
   status_changed: SwapHorizOutlinedIcon,
